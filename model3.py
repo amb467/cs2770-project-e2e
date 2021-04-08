@@ -23,7 +23,7 @@ class EncoderCNN(nn.Module):
         """Extract feature vectors from input images."""
         with torch.no_grad():
         
-        	""" This was the set-up from the inception_v3 model
+            """ This was the set-up from the inception_v3 model
             x = self.modules[0](images)
             x = self.modules[1](x)
             x = self.modules[2](x)
@@ -49,7 +49,7 @@ class EncoderCNN(nn.Module):
             x = self.modules[0](images)
             x = F.max_pool2d(x, stride=2)
             for i in range(2,18):
-            	x = self.modules[i](x)
+                x = self.modules[i](x)
             x = F.avg_pool2d(x)
             x = x.view(x.size(0), -1)
             
