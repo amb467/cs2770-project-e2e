@@ -21,7 +21,7 @@ image_data_set = args.data_set
 if not (image_data_set == 'vqa' or image_data_set == 'vqg'):
 	raise Exception(f'Usage train.py [vqa|vqg]: you provided an invalid image data set: {image_data_set}')
 
-config_set = f'TRAIN_{image_data_set.upper()}'
+config_set = f'TRAIN-{image_data_set.upper()}'
 config = configparser.ConfigParser()
 config.read('config.ini')
 params = config[config_set]
