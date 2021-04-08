@@ -15,7 +15,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 parser = argparse.ArgumentParser(description='CS2770 Project Train')
 parser.add_argument('data_set', type=str, help='Train on "vqa" or "vqg" questions')
-parser.add_argument('config', type=pathlib.Path, default='config.ini', help='The config file')
+parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='The config file')
 args = parser.parse_args()
 image_data_set = args.data_set
 
