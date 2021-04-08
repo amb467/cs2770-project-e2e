@@ -19,7 +19,7 @@ parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='T
 
 args = parser.parse_args()
 image_data_set = args.data_set
-root_dir = os.getcwd()
+root_dir = os.path.dirname(os.path.realpath(__file__))
 
 if not (image_data_set == 'vqa' or image_data_set == 'vqg'):
 	raise Exception(f'Usage train.py [vqa|vqg]: you provided an invalid image data set: {image_data_set}')
