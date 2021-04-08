@@ -47,6 +47,7 @@ class EncoderCNN(nn.Module):
             """
             
             x = self.modules[0](images)
+            print(f'Type of x: {typeof x}')
             x = F.max_pool2d(x, kernel_size=3, stride=2)
             for i in range(2,len(self.modules)):
                 x = self.modules[i](x)
