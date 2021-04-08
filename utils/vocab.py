@@ -38,7 +38,7 @@ def build_vocab(data_file, data_set, vocab_path=None, threshold=5):
     counter = Counter()
         
     with open(data_file) as f:
-        for line in f.readlines():
+        for line in f.readlines()[1:]:
             row_data = line.split('\t')
             questions = row_data[q_row].split('---')
             

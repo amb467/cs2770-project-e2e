@@ -29,7 +29,7 @@ class VQGDataset(data.Dataset):
             raise Exception(f'VQGDataset.init: data_set must be vqa or vqg, found {data_set}')
         
         with open(data_file) as f:
-            for line in f.readlines():
+            for line in f.readlines()[1:]:
                 row_data = line.split('\t')
                 img_id = row_data[0]
                 img_url = row_data[2]
