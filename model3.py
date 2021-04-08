@@ -54,6 +54,7 @@ class EncoderCNN(nn.Module):
                 #print(f'After module {i}, dimensions of x: {x.size()}')
             x = F.avg_pool2d(x, kernel_size=2)
             x = x.view(x.size(0), -1)
+            print(f'x has dimensions: {x.size()}')
             
         features = self.bn(self.linear(x))
         return features
