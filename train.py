@@ -20,13 +20,14 @@ parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='T
 args = parser.parse_args()
 image_data_set = args.data_set
 root_dir = os.path.dirname(os.path.realpath(__file__))
+config_path = os.path.join(root_dir, args.config)
 
 if not (image_data_set == 'vqa' or image_data_set == 'vqg'):
 	raise Exception(f'Usage train.py [vqa|vqg]: you provided an invalid image data set: {image_data_set}')
 
 config_set = f'train.{image_data_set}'
 config = configparser.ConfigParser()
-config.read(args.config)
+config.read(config_path)
 params = config[config_set]
 model_path = os.path.join(root_dir, params['model_path'])
 crop_size = int(params['crop_size'])
