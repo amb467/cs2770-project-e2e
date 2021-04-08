@@ -51,7 +51,7 @@ class EncoderCNN(nn.Module):
             x = F.max_pool2d(x, kernel_size=3, stride=2)
             for i in range(1,len(self.modules)-1):	# I cut off the last layer because it was reducing the size of the matrix to 1x1
                 x = self.modules[i](x)
-                print(f'After module {i}, dimensions of x: {x.size()}')
+                #print(f'After module {i}, dimensions of x: {x.size()}')
             x = F.avg_pool2d(x, kernel_size=2)
             x = x.view(x.size(0), -1)
             
