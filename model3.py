@@ -50,7 +50,7 @@ class EncoderCNN(nn.Module):
             x = F.max_pool2d(x, kernel_size=3, stride=2)
             for i in range(2,len(self.modules)):
                 x = self.modules[i](x)
-            x = F.avg_pool2d(x, kernel_size=8)
+            x = F.avg_pool2d(x, kernel_size=2)
             x = x.view(x.size(0), -1)
             
         features = self.bn(self.linear(x))
