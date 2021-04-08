@@ -46,6 +46,7 @@ class EncoderCNN(nn.Module):
             x = x.view(x.size(0), -1)    
             """
             
+            print(f'Len of self.modules is {len(self.modules)}')
             x = self.modules[0](images)
             x = F.max_pool2d(x, kernel_size=3, stride=2)
             for i in range(2,17):
