@@ -11,7 +11,10 @@ class EncoderCNN(nn.Module):
     def __init__(self, embed_size):
         """Load the pretrained ResNet-152 and replace top fc layer."""
         super(EncoderCNN, self).__init__()
-        resnet = models.inception_v3(pretrained=True)
+        #resnet = models.inception_v3(pretrained=True)
+        resnet = models.resnet18(pretrained=True)
+        print('Resnet:')
+        print(resnet)
         self.modules = list(resnet.children())[:-1]      # delete the last fc layer.
         for i in range(len(self.modules)):
             self.modules[i] = self.modules[i].to(device)
