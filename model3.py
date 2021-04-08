@@ -13,8 +13,6 @@ class EncoderCNN(nn.Module):
         super(EncoderCNN, self).__init__()
         #resnet = models.inception_v3(pretrained=True)
         resnet = models.resnet18(pretrained=True)
-        print('Resnet:')
-        print(resnet)
         self.modules = list(resnet.children())[:-1]      # delete the last fc layer.
         for i in range(len(self.modules)):
             self.modules[i] = self.modules[i].to(device)
@@ -24,6 +22,8 @@ class EncoderCNN(nn.Module):
     def forward(self, images):
         """Extract feature vectors from input images."""
         with torch.no_grad():
+        
+        	""" This was the set-up from the inception_v3 model
             x = self.modules[0](images)
             x = self.modules[1](x)
             x = self.modules[2](x)
@@ -43,7 +43,16 @@ class EncoderCNN(nn.Module):
             x = self.modules[15](x)
             x = self.modules[16](x)
             x = F.avg_pool2d(x, kernel_size=8)
-            x = x.view(x.size(0), -1)           
+            x = x.view(x.size(0), -1)    
+            """
+            
+            x = self.modules[0](images)
+            x = F.max_pool2d(x, stride=2)
+            for i in range(2,18):
+            	x = self.modules[i](x)
+            x = F.avg_pool2d(x)
+            x = x.view(x.size(0), -1)
+            
         features = self.bn(self.linear(x))
         return features
 
