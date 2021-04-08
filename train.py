@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-import os, pickle, numpy as np
+import os, pathlib, pickle, numpy as np
 import argparse, configparser
 from utils.data_loader import get_loader 
 from utils.vocab import Vocabulary
@@ -15,6 +15,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 parser = argparse.ArgumentParser(description='CS2770 Project Train')
 parser.add_argument('data_set', type=str, help='Train on "vqa" or "vqg" questions')
+parser.add_argument('config', type=pathlib.Path, default='config.ini', help='The config file')
 args = parser.parse_args()
 image_data_set = args.data_set
 
@@ -23,7 +24,7 @@ if not (image_data_set == 'vqa' or image_data_set == 'vqg'):
 
 config_set = f'train.{image_data_set}'
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(args.config)
 params = config[config_set]
 model_path = params['model_path']
 crop_size = int(params['crop_size'])
