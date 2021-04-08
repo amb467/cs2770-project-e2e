@@ -16,8 +16,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 parser = argparse.ArgumentParser(description='CS2770 Project Train')
 parser.add_argument('data_set', type=str, help='Train on "vqa" or "vqg" questions')
 parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='The config file')
+
 args = parser.parse_args()
 image_data_set = args.data_set
+root_dir = os.getcwd()
 
 if not (image_data_set == 'vqa' or image_data_set == 'vqg'):
 	raise Exception(f'Usage train.py [vqa|vqg]: you provided an invalid image data set: {image_data_set}')
@@ -26,11 +28,11 @@ config_set = f'train.{image_data_set}'
 config = configparser.ConfigParser()
 config.read(args.config)
 params = config[config_set]
-model_path = params['model_path']
+model_path = os.path.join(root_dir, params['model_path'])
 crop_size = int(params['crop_size'])
-image_dir = params['image_dir']
-data_file_path = params['data_file_path']
-vocab_path = params['vocab_path']
+image_dir = os.path.join(root_dir, params['image_dir'])
+data_file_path = os.path.join(root_dir, params['data_file_path'])
+vocab_path = os.path.join(root_dir, params['vocab_path'])
 log_step = int(params['log_step'])
 embed_size = int(params['embed_size'])
 hidden_size = int(params['hidden_size'])
