@@ -17,8 +17,8 @@ root_dir = os.path.dirname(os.path.realpath(__file__))
 encoder, decoder, data_loader, config = proc(args, 'val', root_dir, 'validate.py')
 
 # Make sure that models exist that we are validating
-encoder_paths = {}
-decoder_paths = {}
+encoder_path = {}
+decoder_path = {}
 
 for epoch in range(1,config['num_epochs']+1):
 	encoder_path[epoch] = os.path.join(config['model_dir'], f'encoder-{epoch}.pth')
