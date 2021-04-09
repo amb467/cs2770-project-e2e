@@ -9,6 +9,7 @@ def test(encoder, decoder, data_loader, id_to_word, doOutputQuestions=False):
 	bleu_score = 0.0
 	
 	for i, (images, questions, lengths) in enumerate(data_loader):
+		print(f'Testing step {i} of {len(data_loader)}')
 		images = images.to(device)
 		feature = encoder(images)
 		sampled_ids = decoder.sample(feature)
