@@ -38,7 +38,7 @@ best_bleu_score = 0
 best_encoder_path = os.path.join(config['model_dir'], 'best_encoder.pth')
 best_decoder_path = os.path.join(config['model_dir'], 'best_decoder.pth')
 
-for epoch in range(1,num_epochs+1):	
+for epoch in range(1,config['num_epochs']+1):	
 	encoder.load_state_dict(torch.load(encoder_path[epoch]))
 	decoder.load_state_dict(torch.load(decoder_path[epoch]))
 	
