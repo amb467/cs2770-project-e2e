@@ -39,6 +39,19 @@ The script `data/partition_data.py` was run to partition the images listed in `d
 5. Download the images from each set into its corresponding data folder
 6. Generate vocabulary objects (of the class `Vocabulary` from `utils/vocab.py` for all of the VQA and VQG questions, respectively, from the training set.  These are pickled and saved in the `data/vocab/` directory.
 
+### Data File Columns
+All of the data files in the `data/data_files/` directory have a header, but here is a breakdown of the columns.  The columns are tab-delimited.
+
+* **image_id**
+* **score**: This is (# of COCO categories from the top five for this image) / (# of all COCO categories for this image).  So a score of 1 means that all of the categories associated with this image are in the top five (as described in the table above).  There are 80 COCO categories, so the score can get pretty low, though it's not 0 for any of the images listed in the data files.
+* **url**: The URL location of the image
+* **categories**: The categories from the top five that apply to this image.  These are delimited by three dashes ('---')
+* **vqa**: The VQA questions associated with this image.  These are delimited by three dashes ('---') 
+* **vqg**: The VQG questions associated with this image.  These are delimited by three dashes ('---') 
+
+These files are already parsed in `utils/data_loader.py` though there will likely need to be an alteration to that code to parse out the categories.
+
+
 ### Train, Validation, and Test Set Size
 * Train: 2434 images
 * Validation: 230 images
