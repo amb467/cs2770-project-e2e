@@ -1,6 +1,7 @@
 import argparse, os, pathlib, numpy as np, torch, torch.nn as nn
-from utils.preproc import proc
 from torch.nn.utils.rnn import pack_padded_sequence
+from utils.preproc import proc
+from utils.vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -16,8 +17,8 @@ root_dir = os.path.dirname(os.path.realpath(__file__))
 encoder, decoder, data_loader, config = proc(args, 'train', root_dir, 'train.py')
 
 # Create model directory
-if not os.path.exists(config['model_path']):
-	os.makedirs(config['model_path'])
+if not os.path.exists(config['model_dir']):
+	os.makedirs(config['model_dir'])
 
 # Put models on device
 encoder = encoder.to(device)
@@ -48,9 +49,9 @@ for epoch in range(1,config['num_epochs']+1):
 		optimizer.step()
 
 		# Print log info
-		if i % log_step == 0:
+		if i % config['log_step'] == 0:
 			print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
 				  .format(epoch, config['num_epochs'], i, total_step, loss.item(), np.exp(loss.item()))) 
 		
-	torch.save(decoder.state_dict(), os.path.join(config['model_path'], f'decoder-{epoch}.pth'))
-	torch.save(encoder.state_dict(), os.path.join(config['model_path'], f'encoder-{epoch}.pth'))
+	torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
+	torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))

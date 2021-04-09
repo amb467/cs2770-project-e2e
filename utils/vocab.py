@@ -16,13 +16,13 @@ class Vocabulary(object):
             self.idx += 1
             
     def id_to_word(self,si):
-		s = []
-		for word_id in si:
-			word = self.idx2word[word_id]
-			s.append(word)
-			if word == '<end>':
-				break
-		return(s)
+        s = []
+        for word_id in si:
+            word = self.idx2word[word_id]
+            s.append(word)
+            if word == '<end>':
+                break
+        return(s)
 
     def __call__(self, word):
         if not word in self.word2idx:
