@@ -42,7 +42,7 @@ for epoch in range(1,config['num_epochs']+1):
 	encoder.load_state_dict(torch.load(encoder_path[epoch]))
 	decoder.load_state_dict(torch.load(decoder_path[epoch]))
 	
-	bleu_score = test(encoder, decoder, data_loader)
+	bleu_score = test(encoder, decoder, data_loader, config['id_to_word'])
 	
 	if bleu_score > best_bleu_score:
 		best_bleu_score = bleu_score

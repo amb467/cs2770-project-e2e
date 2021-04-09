@@ -2,7 +2,7 @@ import argparse, copy, nltk, os, pathlib, torch, numpy as np
 from utils.preproc import proc
 from utils.vocab import Vocabulary
 
-def test(encoder, decoder, data_loader, doOutputQuestions=False):
+def test(encoder, decoder, data_loader, id_to_word, doOutputQuestions=False):
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	c = nltk.translate.bleu_score.SmoothingFunction()
 	
@@ -16,7 +16,7 @@ def test(encoder, decoder, data_loader, doOutputQuestions=False):
 		questions = questions.detach().cpu().numpy()
 		references = []
 		for item in questions:
-			references.append(config['id_to_word'](item))
+			references.append(id_to_word(item))
 		generated = id_to_word(sampled_ids)
 		
 		if doOutputQuestions:
@@ -53,7 +53,7 @@ if __name__ == '__main__':
 	encoder.load_state_dict(torch.load(encoder_path))
 	decoder.load_state_dict(torch.load(decoder_path))
 
-	bleu_score = test(encoder, decoder, data_loader)
+	bleu_score = test(encoder, decoder, data_loader, config['id_to_word'])
 	print(f'Average bleu score for test set: {bleu_score}')
 
 
