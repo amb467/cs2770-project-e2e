@@ -1,12 +1,11 @@
 import argparse, copy, nltk, os, pathlib, torch, numpy as np
 from utils.preproc import proc
-from utils.vocab import Vocabulary
 
 def test(encoder, decoder, data_loader, id_to_word, doOutputQuestions=False):
 	device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 	c = nltk.translate.bleu_score.SmoothingFunction()
 	
-	bleu_score = 0.0
+	total_bleu_score = 0.0
 	
 	for i, (images, questions, lengths) in enumerate(data_loader):
 		print(f'Testing step {i} of {len(data_loader)}')
@@ -20,12 +19,13 @@ def test(encoder, decoder, data_loader, id_to_word, doOutputQuestions=False):
 			references.append(id_to_word(item))
 		generated = id_to_word(sampled_ids)
 		
+		bleu_score = nltk.translate.bleu_score.sentence_bleu(references,generated,smoothing_function=c.method7)
+		total_bleu_score += bleu_score
+		
 		if doOutputQuestions:
-			print(f'{i} of {len(data_loader)}: references: {references} | generated: {generated}')	
+			print(f'{i} of {len(data_loader)}: bleu score: {bleu_score} | references: {references} | generated: {generated}')	
 	
-		bleu_score += nltk.translate.bleu_score.sentence_bleu(references,generated,smoothing_function=c.method7)
-	
-	return bleu_score / float(len(data_loader))
+	return total_bleu_score / float(len(data_loader))
 
 if __name__ == '__main__':
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 	encoder.load_state_dict(torch.load(encoder_path))
 	decoder.load_state_dict(torch.load(decoder_path))
 
-	bleu_score = test(encoder, decoder, data_loader, config['id_to_word'])
+	bleu_score = test(encoder, decoder, data_loader, config['id_to_word'], True)
 	print(f'Average bleu score for test set: {bleu_score}')
 
 

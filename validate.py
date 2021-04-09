@@ -1,7 +1,6 @@
 import argparse, copy, os, pathlib, torch
 from test import test
 from utils.preproc import proc
-from utils.vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -48,6 +47,6 @@ for epoch in range(1,config['num_epochs']+1):
 	if bleu_score > best_bleu_score:
 		best_bleu_score = bleu_score
 		best_encoder = copy.deepcopy(encoder.state_dict())
-		best_decoder = copy.deepcopy(encoder.state_dict())
+		best_decoder = copy.deepcopy(decoder.state_dict())
 		torch.save(best_encoder, best_encoder_path)
 		torch.save(best_decoder, best_decoder_path)

@@ -1,7 +1,6 @@
 import argparse, os, pathlib, numpy as np, torch, torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
 from utils.preproc import proc
-from utils.vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
