@@ -53,9 +53,12 @@ These files are already parsed in `utils/data_loader.py` though there will likel
 
 
 ### Train, Validation, and Test Set Size
-* Train: 2434 images
-* Validation: 230 images
-* Test: 230 images
+
+| Set | # of Images | # of VQA Questions | # of VQG Questions |
+|-----|-------------|--------------------|--------------------|
+| Train | 2,434 | 13,492 | 12,164 |
+| Validate | 230 | 1,137 | 1,149 |
+| Test | 230 | 1,256 | 1,150 |
 
 ## Config
 
