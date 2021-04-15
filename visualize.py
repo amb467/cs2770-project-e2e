@@ -21,25 +21,25 @@ def get_images(image_count_config, root_dir):
     img_ids = []
     images = []
 
-	with open(data_file) as f:
-		for line in f.readlines()[1:]:
-			row_data = line.split('\t')
-			img_ids.append(row_data[0])
+    with open(data_file) as f:
+        for line in f.readlines()[1:]:
+            row_data = line.split('\t')
+            img_ids.append(row_data[0])
         
     random.shuffle(self.img_ids)
     
     for img_id in img_ids[:image_count]
-    	print(f'Selected image: {img_id}')
+        print(f'Selected image: {img_id}')
         img_file_path = os.path.join(img_dir, img_id)
         
-		if os.path.exists(img_file_path):         
-			image = Image.open(img_file_path).convert('RGB')
-		else:
-			raise Exception(f'visualize.get_images: no such image: {img_file_path}')
+        if os.path.exists(img_file_path):         
+            image = Image.open(img_file_path).convert('RGB')
+        else:
+            raise Exception(f'visualize.get_images: no such image: {img_file_path}')
         
-		images.append(self.transform(image))
-		
-	return images
+        images.append(self.transform(image))
+        
+    return images
         
 def get_encoder(config, q_data_set, root_dir):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     encoder = {}
     activations = {}    
     for q_data_set in ['vqa', 'vqg']:
-    	# Make the encoder
+        # Make the encoder
         encoder = get_encoder(config, q_data_set, device, root_dir)
         encoder.to(device)
         encoder.eval()
