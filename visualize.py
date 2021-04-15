@@ -9,7 +9,6 @@ from torchsummary import summary
 class SaveFeatures():
     def __init__(self, module:
         self.hook = module.register_forward_hook(self.hook_fn)
-        self.device = device
     def hook_fn(self, module, input, output):
         self.features = torch.tensor(output)
     def close(self):
