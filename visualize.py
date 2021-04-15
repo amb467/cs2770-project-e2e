@@ -82,8 +82,8 @@ if __name__ == '__main__':
 
     # Build the set of images
     img_ids, images = get_images(args.image_count, config, root_dir)
-    images = [img.to(device) for img in images]
-    images = torch.stack(images, 0)
+    image_to_tensor = transforms.ToTensor()
+    images = [image_to_tensor(img).to(device) for img in images]
     
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
@@ -102,19 +102,14 @@ if __name__ == '__main__':
         # Set up a hook to capture layer output once the encoder has run on the images
         activations = {layer: SaveFeatures(list(encoder.children())[layer]) for layer in capture_layers}
         
-        # Run the encoder on the images
-        features = encoder(images)
+        for i, image in enumerate(images):
+        	features = encoder(image)
+        	
+			# Output a visualization of each captured layer
+			for layer, activation in activations.items():		
+				image = tensor_to_image(activation.features)
+				image_file_name = f'{img_ids[img_count]}_{q_data_set}_{layer}.jpg'
+				image_path = os.path.join(out_dir, image_file_name)
+				image.save(image_path, 'JPEG')
         
-        # Output a visualization of each captured layer
-        for layer, activation in activations.items():
-            #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
-            #plt.imshow(activation.features)
-            #plt.show()
-            
-            for img_count, image in enumerate(activation.features):
-                image = tensor_to_image(image)
-                image_file_name = f'{img_ids[img_count]}_{q_data_set}_{layer}.jpg'
-                image_path = os.path.join(out_dir, image_file_name)
-                image.save(image_path, 'JPEG')
-                
-            activation.close()
+        [activation.close() for activation in activations]
