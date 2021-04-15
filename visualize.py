@@ -88,7 +88,7 @@ if __name__ == '__main__':
     vqg_encoder = get_encoder(config, 'vqg', device, root_dir)
     
     print('VQA summary:')
-    print summary(vqa_encoder)
+    summary(vqa_encoder)
     #print('VQG summary')
     #print summary(vqg_encoder)
     
