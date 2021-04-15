@@ -5,6 +5,8 @@ from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
+import cv2 as cv 
+from google.colab.patches import cv2_imshow # for image display
 
 class SaveFeatures():
     def __init__(self, module):
@@ -102,8 +104,11 @@ if __name__ == '__main__':
         # Output a visualization of each captured layer
         for i, activation in enumerate(activations):
             #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
-            plt.imshow(activation.features)
-            plt.show()
+            #plt.imshow(activation.features)
+            #plt.show()
+            image = activation.features.toPILImage()
+  			cv2_imshow(image)
+  			print('\n')
             activation.close()
 
 
