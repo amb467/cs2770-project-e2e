@@ -7,7 +7,7 @@ from PIL import Image
 from torchsummary import summary
 
 class SaveFeatures():
-    def __init__(self, module:
+    def __init__(self, module):
         self.hook = module.register_forward_hook(self.hook_fn)
     def hook_fn(self, module, input, output):
         self.features = torch.tensor(output)
