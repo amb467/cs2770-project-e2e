@@ -119,5 +119,6 @@ if __name__ == '__main__':
 					image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}_{f}.jpg'
 					image_path = os.path.join(out_dir, image_file_name)
 					image.save(image_path, 'JPEG')
+					print(f'Printed image {image_file_name}')
         
         [activation.close() for activation in activations.values()]
