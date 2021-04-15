@@ -1,4 +1,5 @@
-import argparse, configparser, os, pathlib, pyplot, random, torch
+import argparse, configparser, os, pathlib, random, torch
+import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from model3 import EncoderCNN
 from utils.preproc import get_transform
@@ -102,7 +103,7 @@ if __name__ == '__main__':
         # Output a visualization of each captured layer
         for i, activation in enumerate(activations):
             #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
-            pyplot.imshow(activation.features)
+            plt.imshow(activation.features)
             activation.close()
 
 
