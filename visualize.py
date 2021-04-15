@@ -38,7 +38,7 @@ def get_images(image_count, config, root_dir):
         else:
             raise Exception(f'visualize.get_images: no such image: {img_file_path}')
         
-        images.append(self.transform(image))
+        images.append(transform(image))
         
     return images
         
