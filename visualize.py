@@ -27,7 +27,7 @@ def get_images(image_count, config, root_dir):
             row_data = line.split('\t')
             img_ids.append(row_data[0])
         
-    random.shuffle(self.img_ids)
+    random.shuffle(img_ids)
     
     for img_id in img_ids[:image_count]:
         print(f'Selected image: {img_id}')
