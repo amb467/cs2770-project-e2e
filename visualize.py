@@ -100,6 +100,8 @@ if __name__ == '__main__':
         encoder.to(device)
         encoder.eval()
         print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
+        for m in encoder.modules():
+        	print(m.name)
         #summary(encoder, (3,299,299))
         
         """
