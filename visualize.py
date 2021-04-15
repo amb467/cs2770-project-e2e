@@ -89,8 +89,8 @@ if __name__ == '__main__':
     
     print('VQA summary:')
     print summary(vqa_encoder)
-    print('VQG summary')
-    print summary(vqg_encoder)
+    #print('VQG summary')
+    #print summary(vqg_encoder)
     
     data_set = VisualizationDataset(args.image_count, config, root_dir)
     
