@@ -88,7 +88,7 @@ if __name__ == '__main__':
     activations = {}    
     for q_data_set in ['vqa', 'vqg']:
         # Make the encoder
-        encoder = get_encoder(config, q_data_set, device, root_dir)
+        encoder = get_encoder(config, q_data_set, root_dir)
         encoder.to(device)
         encoder.eval()
         #print(f'Summary of model with question data set: {q_data_set}')
