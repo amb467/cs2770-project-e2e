@@ -74,11 +74,18 @@ if __name__ == '__main__':
     vqg_encoder = get_encoder(config, 'vqg', device, root_dir)
     
     data_set = VisualizationDataset(args.image_count, config, root_dir)
+    images = [data_set[i].to(device) for i in range(args.image_count)]
+    vqa_feature = vqa_encoder(images)
+    print(f'VQA features: {vqa_feature}')
+    vqg_feature = vqg_encoder(images)
+    print(f'VQG features: {vqg_feature}')
     
+    """
     for i in range(args.image_count):
         image = data_set[i].to(device)
         vqa_feature = vqa_encoder(image)
         print(f'VQA features: {vqa_feature}')
         vqg_feature = vqg_encoder(image)
         print(f'VQG features: {vqg_feature}')
+    """
         
