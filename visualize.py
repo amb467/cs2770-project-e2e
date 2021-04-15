@@ -31,7 +31,7 @@ class VisualizationDataset():
         
         if self.transform is not None:
             image = self.transform(image)
-
+            
         return image
         
 def get_encoder(config, q_data_set, device, root_dir):
@@ -74,11 +74,15 @@ if __name__ == '__main__':
     vqg_encoder = get_encoder(config, 'vqg', device, root_dir)
     
     data_set = VisualizationDataset(args.image_count, config, root_dir)
+    
+
     images = [data_set[i].to(device) for i in range(args.image_count)]
+    images = torch.stack(images, 0)
     vqa_feature = vqa_encoder(images)
     print(f'VQA features: {vqa_feature}')
     vqg_feature = vqg_encoder(images)
     print(f'VQG features: {vqg_feature}')
+ 
     
     """
     for i in range(args.image_count):
