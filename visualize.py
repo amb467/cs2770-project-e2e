@@ -112,9 +112,7 @@ if __name__ == '__main__':
             activation.close()
         
 
-    
     # Run the data set through the model and get the features for the convolutional layers
-    for 
     
     #print('VQA summary:')
     #summary(vqa_encoder, (8,3,299,299))
