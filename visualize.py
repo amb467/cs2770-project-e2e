@@ -1,13 +1,13 @@
 import argparse, configparser, os, pathlib, random, torch
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import torch.nn.functional as F
 from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
 from torchvision import transforms
-import cv2 as cv 
-from google.colab.patches import cv2_imshow # for image display
+#import cv2 as cv 
+#from google.colab.patches import cv2_imshow # for image display
 
 class SaveFeatures():
     def __init__(self, module):
@@ -30,9 +30,9 @@ def get_images(image_count, config, root_dir):
             img_ids.append(row_data[0])
         
     random.shuffle(img_ids)
+    img_ids = img_ids[:image_count]
     
-    for img_id in img_ids[:image_count]:
-        print(f'Selected image: {img_id}')
+    for img_id in img_ids:
         img_file_path = os.path.join(img_dir, img_id)
         
         if os.path.exists(img_file_path):         
@@ -42,7 +42,7 @@ def get_images(image_count, config, root_dir):
         
         images.append(transform(image))
         
-    return images
+    return img_ids, images
         
 def get_encoder(config, q_data_set, root_dir):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
@@ -81,13 +81,15 @@ if __name__ == '__main__':
     config.read(config_path)
 
     # Build the set of images
-    images = get_images(args.image_count, config, root_dir)
+    img_ids, images = get_images(args.image_count, config, root_dir)
     images = [img.to(device) for img in images]
     images = torch.stack(images, 0)
     
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
-    activations = {}    
+    activations = {} 
+    capture_layers = [0,1]
+    
     for q_data_set in ['vqa', 'vqg']:
         # Make the encoder
         encoder = get_encoder(config, q_data_set, root_dir)
@@ -97,21 +99,21 @@ if __name__ == '__main__':
         #summary(encode, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
-        activations = [SaveFeatures(module) for module in list(encoder.children())]
+        activations = {layer: SaveFeatures(list(encoder.children())[layer]) for layer in capture_layers}
         
         # Run the encoder on the images
         features = encoder(images)
         
         # Output a visualization of each captured layer
-        for i, activation in enumerate(activations):
+        for layer, activation in activations.items():
             #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
             #plt.imshow(activation.features)
             #plt.show()
-            image = transforms.ToPILImage(activation.features)
-            cv2_imshow(image)
-            print('\n')
+            
+            for img_count, image in enumerate(activation.features):
+                image = transforms.ToPILImage(image)
+                image_file_name = f'{img_ids[img_count]}_{q_data_set}_{layer}.jpg'
+                image_path = os.join(out_dir, image_file_name)
+                image.save(image_path, 'JPEG')
+                
             activation.close()
-
-
-
-        
