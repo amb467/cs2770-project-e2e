@@ -69,7 +69,7 @@ if __name__ == '__main__':
     config.read(config_path)
 
     vqa_encoder = get_encoder(config, 'vqa', device, root_dir)
-    vqg_encoder = get_encoder(config, 'vqg', device, rooot_dir)
+    vqg_encoder = get_encoder(config, 'vqg', device, root_dir)
     
     data_set = VisualizationDataset(args.image_count, config, root_dir)
     
