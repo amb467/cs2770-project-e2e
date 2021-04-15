@@ -47,6 +47,7 @@ def get_encoder(config, q_data_set, device, root_dir):
         raise Exception(f'Encoder does not exist: {encoder_path}')
     
     encoder.load_state_dict(torch.load(encoder_path))
+    encoder.eval()
     return encoder
     
 def forward(encoder, images):
@@ -93,14 +94,14 @@ if __name__ == '__main__':
     images = [data_set[i].to(device) for i in range(args.image_count)]
     images = torch.stack(images, 0)
     
-    print('VQA summary:')
-    summary(vqa_encoder, (8,3,299,299))
+    #print('VQA summary:')
+    #summary(vqa_encoder, (8,3,299,299))
     
     #vqa_feature = vqa_encoder(images)
     vqa_feature = forward(vqa_encoder, images)
-    #print(f'VQA features: {vqa_feature}')
+    print(f'VQA features: {vqa_feature}')
     #vqg_feature = vqg_encoder(images)
     vqg_feature = forward(vqg_encoder, images)
-    #print(f'VQG features: {vqg_feature}')
+    print(f'VQG features: {vqg_feature}')
 
         
