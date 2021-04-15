@@ -94,7 +94,7 @@ if __name__ == '__main__':
     images = torch.stack(images, 0)
     
     print('VQA summary:')
-    summary(vqa_encoder, (3,299,299))
+    summary(vqa_encoder, (8,3,299,299))
     
     #vqa_feature = vqa_encoder(images)
     vqa_feature = forward(vqa_encoder, images)
