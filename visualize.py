@@ -1,13 +1,12 @@
-import argparse, configparser, os, pathlib, random, torch
+import argparse, configparser, os, pathlib, pyplot, random, torch
 import torch.nn.functional as F
 from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
-
-#from torchsummary import summary
+from torchsummary import summary
 
 class SaveFeatures():
-    def __init__(self, module, device):
+    def __init__(self, module,device):
         self.hook = module.register_forward_hook(self.hook_fn)
         self.device = device
     def hook_fn(self, module, input, output):
@@ -15,60 +14,44 @@ class SaveFeatures():
     def close(self):
         self.hook.remove()
         
-class VisualizationDataset():
-    def __init__(self, image_count, config, root_dir):
-    
-        self.img_dir = os.path.join(root_dir, config['test']['image_dir'])
-        self.transform = get_transform(int(config['general']['crop_size']))
-        
-        data_file = os.path.join(root_dir, config['test']['data_file_path'])
-        self.images = []
+def get_images(image_count_config, root_dir):
+    img_dir = os.path.join(root_dir, config['test']['image_dir'])
+    transform = get_transform(int(config['general']['crop_size']))
+    data_file = os.path.join(root_dir, config['test']['data_file_path'])
+    img_ids = []
+    images = []
 
-        with open(data_file) as f:
-            for line in f.readlines()[1:]:
-                row_data = line.split('\t')
-                self.images.append(row_data[0])
+	with open(data_file) as f:
+		for line in f.readlines()[1:]:
+			row_data = line.split('\t')
+			img_ids.append(row_data[0])
         
-        random.shuffle(self.images)
-        self.images = self.images[:image_count]
-                    
-    def __getitem__(self, index):
-        img_id = self.images[index]
-        img_file_path = os.path.join(self.img_dir, img_id)
+    random.shuffle(self.img_ids)
+    
+    for img_id in img_ids[:image_count]
+    	print(f'Selected image: {img_id}')
+        img_file_path = os.path.join(img_dir, img_id)
         
-        if os.path.exists(img_file_path):         
-            image = Image.open(img_file_path).convert('RGB')
-        else:
-            raise Exception(f'VisualizationDataset.__getitem__: no such image: {img_file_path}')
+		if os.path.exists(img_file_path):         
+			image = Image.open(img_file_path).convert('RGB')
+		else:
+			raise Exception(f'visualize.get_images: no such image: {img_file_path}')
         
-        if self.transform is not None:
-            image = self.transform(image)
-            
-        return image
+		images.append(self.transform(image))
+		
+	return images
         
-def get_encoder(config, q_data_set, device, root_dir):
+def get_encoder(config, q_data_set, root_dir):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
     embed_size = int(config['general']['embed_size'])
-    encoder = EncoderCNN(embed_size).to(device)
+    encoder = EncoderCNN(embed_size)
     encoder_path = os.path.join(model_dir, 'best_encoder.pth')
     
     if not os.path.exists(encoder_path):
         raise Exception(f'Encoder does not exist: {encoder_path}')
     
     encoder.load_state_dict(torch.load(encoder_path))
-    encoder.eval()
     return encoder
-    
-def forward(encoder, images):
-    with torch.no_grad():
-        x = encoder.modules[0](images)
-        x = F.max_pool2d(x, kernel_size=3, stride=2)
-        for i in range(1,len(encoder.modules)-1):   # I cut off the last layer because it was reducing the size of the matrix to 1x1
-            x = encoder.modules[i](x)
-        x = F.avg_pool2d(x, kernel_size=2)
-        x = x.view(x.size(0), -1)
-        
-    return x
     
 if __name__ == '__main__':
 
@@ -94,34 +77,34 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read(config_path)
 
-    # Build the data set of images
-    data_set = VisualizationDataset(args.image_count, config, root_dir)
-    images = [data_set[i].to(device) for i in range(args.image_count)]
+    # Build the set of images
+    images = get_images(args.image_count, config, root_dir)
+    images = [img.to(device) for img in images]
     images = torch.stack(images, 0)
     
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
     activations = {}    
     for q_data_set in ['vqa', 'vqg']:
+    	# Make the encoder
         encoder = get_encoder(config, q_data_set, device, root_dir)
+        encoder.to(device)
+        encoder.eval()
+        #print(f'Summary of model with question data set: {q_data_set}')
+        #summary(encode, (3,299,299))
+        
+        # Set up a hook to capture layer output once the encoder has run on the images
         activations = [SaveFeatures(module, device) for module in list(encoder.children())]
+        
+        # Run the encoder on the images
         features = encoder(images)
         
+        # Output a visualization of each captured layer
         for i, activation in enumerate(activations):
-            print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
+            #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
+            pyplot.imshow(activation.features)
             activation.close()
-        
 
-    # Run the data set through the model and get the features for the convolutional layers
-    
-    #print('VQA summary:')
-    #summary(vqa_encoder, (8,3,299,299))
-    
-    #vqa_feature = vqa_encoder(images)
-    #vqa_feature = forward(vqa_encoder, images)
-    #print(f'VQA features: {vqa_feature}')
-    #vqg_feature = vqg_encoder(images)
-    #vqg_feature = forward(vqg_encoder, images)
-    #print(f'VQG features: {vqg_feature}')
+
 
         
