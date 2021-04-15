@@ -90,7 +90,9 @@ if __name__ == '__main__':
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
     activations = {} 
-    capture_layers = [10,16,23,32,39,48,55,64]
+    #capture_layers = [10,16,23,32,39,48,55,64]
+    capture_layers = [55,64]
+    filters = [0,3,15,63,255,511]
     tensor_to_image = transforms.ToPILImage()
     
     for q_data_set in ['vqa']: #['vqa', 'vqg']:
@@ -112,9 +114,10 @@ if __name__ == '__main__':
             
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
-                image = tensor_to_image(torch.squeeze(activation.features)[0])
-                image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}.jpg'
-                image_path = os.path.join(out_dir, image_file_name)
-                image.save(image_path, 'JPEG')
+            	for f in filters:
+					image = tensor_to_image(torch.squeeze(activation.features)[f])
+					image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}_{f}.jpg'
+					image_path = os.path.join(out_dir, image_file_name)
+					image.save(image_path, 'JPEG')
         
         [activation.close() for activation in activations.values()]
