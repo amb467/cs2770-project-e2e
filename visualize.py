@@ -4,6 +4,8 @@ from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 
+from torchsummary import summary
+
 class VisualizationDataset():
     def __init__(self, image_count, config, root_dir):
     
@@ -84,6 +86,11 @@ if __name__ == '__main__':
 
     vqa_encoder = get_encoder(config, 'vqa', device, root_dir)
     vqg_encoder = get_encoder(config, 'vqg', device, root_dir)
+    
+    print('VQA summary:')
+    print summary(vqa_encoder)
+    print('VQG summary')
+    print summary(vqg_encoder)
     
     data_set = VisualizationDataset(args.image_count, config, root_dir)
     
