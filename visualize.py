@@ -60,15 +60,15 @@ def get_encoder(config, q_data_set, device, root_dir):
     return encoder
     
 def forward(encoder, images):
-	with torch.no_grad():
-		x = encoder.modules[0](images)
-		x = F.max_pool2d(x, kernel_size=3, stride=2)
-		for i in range(1,len(encoder.modules)-1):	# I cut off the last layer because it was reducing the size of the matrix to 1x1
-			x = encoder.modules[i](x)
-		x = F.avg_pool2d(x, kernel_size=2)
-		x = x.view(x.size(0), -1)
-		
-	return x
+    with torch.no_grad():
+        x = encoder.modules[0](images)
+        x = F.max_pool2d(x, kernel_size=3, stride=2)
+        for i in range(1,len(encoder.modules)-1):   # I cut off the last layer because it was reducing the size of the matrix to 1x1
+            x = encoder.modules[i](x)
+        x = F.avg_pool2d(x, kernel_size=2)
+        x = x.view(x.size(0), -1)
+        
+    return x
     
 if __name__ == '__main__':
 
@@ -99,18 +99,18 @@ if __name__ == '__main__':
     images = [data_set[i].to(device) for i in range(args.image_count)]
     images = torch.stack(images, 0)
     
-	# Get the encoders and create an array of activation objects to capture the features in the convolutional layers
-	encoder = {}
-	activations = {}	
-	for q_data_set in ['vqa', 'vqg']:
-		encoder = get_encoder(config, q_data_set, device, root_dir)
-		activations = [SaveFeatures(list(encoder.children())[i]) for in in range(7)]
-    	features = encoder(images)
-    	
-    	for i, activation in enumerate(activations):
-    		print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
-    		activation.close()
-    	
+    # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
+    encoder = {}
+    activations = {}    
+    for q_data_set in ['vqa', 'vqg']:
+        encoder = get_encoder(config, q_data_set, device, root_dir)
+        activations = [SaveFeatures(list(encoder.children())[i]) for in in range(7)]
+        features = encoder(images)
+        
+        for i, activation in enumerate(activations):
+            print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
+            activation.close()
+        
 
     
     # Run the data set through the model and get the features for the convolutional layers
