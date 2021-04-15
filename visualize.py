@@ -82,8 +82,7 @@ if __name__ == '__main__':
 
     # Build the set of images
     img_ids, images = get_images(args.image_count, config, root_dir)
-    image_to_tensor = transforms.ToTensor()
-    images = [image_to_tensor(img).to(device) for img in images]
+    images = [img.to(device) for img in images]
     
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
