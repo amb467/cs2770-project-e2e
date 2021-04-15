@@ -105,7 +105,7 @@ if __name__ == '__main__':
         #summary(encoder, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
-        activations = {layer: SaveFeatures(list(encoder.children())[layer]) for layer in capture_layers}
+        activations = {layer: SaveFeatures(list(encoder.modules())[layer]) for layer in capture_layers}
         
         for i, image in enumerate(images):
             features = encoder(image)
