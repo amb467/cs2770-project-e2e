@@ -56,8 +56,7 @@ def forward(encoder, images):
 		x = F.avg_pool2d(x, kernel_size=2)
 		x = x.view(x.size(0), -1)
 		
-	features = encoder.bn(encoder.linear(x))
-	return features
+	return x
     
 if __name__ == '__main__':
 
@@ -97,14 +96,5 @@ if __name__ == '__main__':
     #vqg_feature = vqg_encoder(images)
     vqg_feature = forward(vqg_encoder, images)
     print(f'VQG features: {vqg_feature}')
- 
-    
-    """
-    for i in range(args.image_count):
-        image = data_set[i].to(device)
-        vqa_feature = vqa_encoder(image)
-        print(f'VQA features: {vqa_feature}')
-        vqg_feature = vqg_encoder(image)
-        print(f'VQG features: {vqg_feature}')
-    """
+
         
