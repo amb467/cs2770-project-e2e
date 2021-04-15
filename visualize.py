@@ -15,7 +15,7 @@ class SaveFeatures():
     def close(self):
         self.hook.remove()
         
-def get_images(image_count_config, root_dir):
+def get_images(image_count, config, root_dir):
     img_dir = os.path.join(root_dir, config['test']['image_dir'])
     transform = get_transform(int(config['general']['crop_size']))
     data_file = os.path.join(root_dir, config['test']['data_file_path'])
