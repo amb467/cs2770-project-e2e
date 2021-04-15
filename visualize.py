@@ -112,4 +112,4 @@ if __name__ == '__main__':
                 image_path = os.path.join(out_dir, image_file_name)
                 image.save(image_path, 'JPEG')
         
-        [activation.close() for activation in activations]
+        [activation.close() for activation in activations.values()]
