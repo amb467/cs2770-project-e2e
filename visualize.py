@@ -4,8 +4,17 @@ from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 
-from torchsummary import summary
+#from torchsummary import summary
 
+class SaveFeatures():
+    def __init__(self, module, device):
+        self.hook = module.register_forward_hook(self.hook_fn)
+        self.device = device
+    def hook_fn(self, module, input, output):
+        self.features = torch.tensor(output,requires_grad=True).to(self.device)
+    def close(self):
+        self.hook.remove()
+        
 class VisualizationDataset():
     def __init__(self, image_count, config, root_dir):
     
@@ -85,23 +94,36 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config.read(config_path)
 
-    vqa_encoder = get_encoder(config, 'vqa', device, root_dir)
-    vqg_encoder = get_encoder(config, 'vqg', device, root_dir)
-    
+    # Build the data set of images
     data_set = VisualizationDataset(args.image_count, config, root_dir)
-    
-
     images = [data_set[i].to(device) for i in range(args.image_count)]
     images = torch.stack(images, 0)
+    
+	# Get the encoders and create an array of activation objects to capture the features in the convolutional layers
+	encoder = {}
+	activations = {}	
+	for q_data_set in ['vqa', 'vqg']:
+		encoder = get_encoder(config, q_data_set, device, root_dir)
+		activations = [SaveFeatures(list(encoder.children())[i]) for in in range(7)]
+    	features = encoder(images)
+    	
+    	for i, activation in enumerate(activations):
+    		print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
+    		activation.close()
+    	
+
+    
+    # Run the data set through the model and get the features for the convolutional layers
+    for 
     
     #print('VQA summary:')
     #summary(vqa_encoder, (8,3,299,299))
     
     #vqa_feature = vqa_encoder(images)
-    vqa_feature = forward(vqa_encoder, images)
-    print(f'VQA features: {vqa_feature}')
+    #vqa_feature = forward(vqa_encoder, images)
+    #print(f'VQA features: {vqa_feature}')
     #vqg_feature = vqg_encoder(images)
-    vqg_feature = forward(vqg_encoder, images)
-    print(f'VQG features: {vqg_feature}')
+    #vqg_feature = forward(vqg_encoder, images)
+    #print(f'VQG features: {vqg_feature}')
 
         
