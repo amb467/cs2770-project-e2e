@@ -103,7 +103,7 @@ if __name__ == '__main__':
         encoder.eval()
         #print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
         #for i, m in enumerate(list(encoder.named_modules())):
-        #	print(f'{i}\t{m[0]}')
+        #   print(f'{i}\t{m[0]}')
         #summary(encoder, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
@@ -114,11 +114,11 @@ if __name__ == '__main__':
             
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
-            	for f in filters:
-					image = tensor_to_image(torch.squeeze(activation.features)[f])
-					image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}_{f}.jpg'
-					image_path = os.path.join(out_dir, image_file_name)
-					image.save(image_path, 'JPEG')
-					print(f'Printed image {image_file_name}')
+                for f in filters:
+                    image = tensor_to_image(torch.squeeze(activation.features)[f])
+                    image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}_{f}.jpg'
+                    image_path = os.path.join(out_dir, image_file_name)
+                    image.save(image_path, 'JPEG')
+                    print(f'Printed image {image_file_name}')
         
         [activation.close() for activation in activations.values()]
