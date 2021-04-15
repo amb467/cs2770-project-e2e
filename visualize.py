@@ -99,9 +99,9 @@ if __name__ == '__main__':
     images = torch.stack(images, 0)
     #vqa_feature = vqa_encoder(images)
     vqa_feature = forward(vqa_encoder, images)
-    print(f'VQA features: {vqa_feature}')
+    #print(f'VQA features: {vqa_feature}')
     #vqg_feature = vqg_encoder(images)
     vqg_feature = forward(vqg_encoder, images)
-    print(f'VQG features: {vqg_feature}')
+    #print(f'VQG features: {vqg_feature}')
 
         
