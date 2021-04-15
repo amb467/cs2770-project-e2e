@@ -90,10 +90,10 @@ if __name__ == '__main__':
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
     activations = {} 
-    capture_layers = [0,1,5,8]
+    capture_layers = [0,1,2,3,4,5,6,7,8,9]
     tensor_to_image = transforms.ToPILImage()
     
-    for q_data_set in ['vqa', 'vqg']:
+    for q_data_set in ['vqa']: #['vqa', 'vqg']:
         # Make the encoder
         #encoder = get_encoder(config, q_data_set, root_dir)
         encoder = resnet = models.resnet18(pretrained=True)
@@ -110,8 +110,7 @@ if __name__ == '__main__':
             
             # Output a visualization of each captured layer
             for layer, activation in activations.items():       
-                print(f'{img_ids[i]}_{q_data_set}_{layer}.jpg')
-                print(activation.features)
+                print(f'Image Id: {img_ids[i]}\tData Set: {q_data_set}\tLayer: {layer}\tFeature Size: {activate.features.size()}')
                 """
                 image = tensor_to_image(activation.features)
                 image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}.jpg'
