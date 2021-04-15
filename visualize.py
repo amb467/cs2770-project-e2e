@@ -7,11 +7,11 @@ from PIL import Image
 from torchsummary import summary
 
 class SaveFeatures():
-    def __init__(self, module,device):
+    def __init__(self, module:
         self.hook = module.register_forward_hook(self.hook_fn)
         self.device = device
     def hook_fn(self, module, input, output):
-        self.features = torch.tensor(output,requires_grad=True).to(self.device)
+        self.features = torch.tensor(output)
     def close(self):
         self.hook.remove()
         
@@ -95,7 +95,7 @@ if __name__ == '__main__':
         #summary(encode, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
-        activations = [SaveFeatures(module, device) for module in list(encoder.children())]
+        activations = [SaveFeatures(module) for module in list(encoder.children())]
         
         # Run the encoder on the images
         features = encoder(images)
