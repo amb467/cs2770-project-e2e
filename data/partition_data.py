@@ -94,14 +94,3 @@ for data_set, data_list in data_sets.items():
         
         with open(img_file_path,'wb') as f:
         	f.write(r.content)
-        	
-        
-        
-
-            
-
-
-        
-
-        
-

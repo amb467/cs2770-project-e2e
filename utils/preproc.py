@@ -4,6 +4,15 @@ from torchvision import transforms
 from utils.vocab import Vocabulary
 from utils.data_loader import get_loader 
 
+def get_transform(crop_size):
+	return transforms.Compose([
+        transforms.Resize(299),
+        transforms.RandomCrop(crop_size),
+        transforms.RandomHorizontalFlip(), 
+        transforms.ToTensor(), 
+        transforms.Normalize((0.485, 0.456, 0.406), 
+                             (0.229, 0.224, 0.225))])
+	
 def proc(args, mode, root_dir, file_name):
 
     q_data_set = args.data_set
@@ -40,14 +49,8 @@ def proc(args, mode, root_dir, file_name):
     vocab_path = os.path.join(root_dir, params['vocab_path'])
 
     # Image preprocessing, normalization for the pretrained resnet
-    transform = transforms.Compose([
-        transforms.Resize(299),
-        transforms.RandomCrop(crop_size),
-        transforms.RandomHorizontalFlip(), 
-        transforms.ToTensor(), 
-        transforms.Normalize((0.485, 0.456, 0.406), 
-                             (0.229, 0.224, 0.225))])
-
+    transform = get_transform(crop_size)
+    
     # Load vocabulary wrapper
     class CustomUnpickler(pickle.Unpickler):
         def find_class(self, module, name):
