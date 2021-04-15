@@ -76,8 +76,8 @@ if __name__ == '__main__':
     
     for i in range(args.image_count):
         image = data_set[i].to(device)
-        vqa_feature = vqa_encoder(images)
+        vqa_feature = vqa_encoder(image)
         print(f'VQA features: {vqa_feature}')
-        vqg_feature = vqg_encoder(images)
+        vqg_feature = vqg_encoder(image)
         print(f'VQG features: {vqg_feature}')
         
