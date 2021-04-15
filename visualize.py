@@ -6,6 +6,8 @@ from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
 from torchvision import transforms
+import torchvision.models as models
+
 #import cv2 as cv 
 #from google.colab.patches import cv2_imshow # for image display
 
@@ -93,12 +95,14 @@ if __name__ == '__main__':
     
     for q_data_set in ['vqa', 'vqg']:
         # Make the encoder
-        encoder = get_encoder(config, q_data_set, root_dir)
+        #encoder = get_encoder(config, q_data_set, root_dir)
+        encoder = resnet = models.resnet18(pretrained=True)
         encoder.to(device)
         encoder.eval()
-        #print(f'Summary of model with question data set: {q_data_set}')
-        #summary(encode, (3,299,299))
+        print(f'Summary of model with question data set: {q_data_set}')
+        summary(encoder, (3,299,299))
         
+        '''
         # Set up a hook to capture layer output once the encoder has run on the images
         activations = {layer: SaveFeatures(list(encoder.children())[layer]) for layer in capture_layers}
         
@@ -113,3 +117,4 @@ if __name__ == '__main__':
                 image.save(image_path, 'JPEG')
         
         [activation.close() for activation in activations.values()]
+        '''
