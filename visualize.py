@@ -108,7 +108,7 @@ if __name__ == '__main__':
             # Output a visualization of each captured layer
             for layer, activation in activations.items():       
                 image = tensor_to_image(activation.features)
-                image_file_name = f'{img_ids[img_count]}_{q_data_set}_{layer}.jpg'
+                image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}.jpg'
                 image_path = os.path.join(out_dir, image_file_name)
                 image.save(image_path, 'JPEG')
         
