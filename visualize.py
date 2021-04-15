@@ -5,6 +5,7 @@ from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
+from torchvision import transforms
 import cv2 as cv 
 from google.colab.patches import cv2_imshow # for image display
 
@@ -106,7 +107,7 @@ if __name__ == '__main__':
             #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
             #plt.imshow(activation.features)
             #plt.show()
-            image = activation.features.toPILImage()
+            image = transforms.toPILImage(activation.features)
             cv2_imshow(image)
             print('\n')
             activation.close()
