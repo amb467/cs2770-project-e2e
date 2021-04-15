@@ -40,7 +40,8 @@ def get_images(image_count, config, root_dir):
         else:
             raise Exception(f'visualize.get_images: no such image: {img_file_path}')
         
-        images.append(transform(image))
+        image = torch.stack(transform(image), 0)
+        images.append(image)
         
     return img_ids, images
         
