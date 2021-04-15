@@ -99,9 +99,10 @@ if __name__ == '__main__':
         encoder = resnet = models.resnet18(pretrained=True)
         encoder.to(device)
         encoder.eval()
-        #print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.children()))}')
+        print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
         #summary(encoder, (3,299,299))
         
+        """
         # Set up a hook to capture layer output once the encoder has run on the images
         activations = {layer: SaveFeatures(list(encoder.children())[layer]) for layer in capture_layers}
         
@@ -111,7 +112,6 @@ if __name__ == '__main__':
             # Output a visualization of each captured layer
             for layer, activation in activations.items():       
                 print(f'Image Id: {img_ids[i]}\tData Set: {q_data_set}\tLayer: {layer}\tFeature Size: {activation.features.size()}')
-                """
                 image = tensor_to_image(activation.features)
                 image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}.jpg'
                 image_path = os.path.join(out_dir, image_file_name)
