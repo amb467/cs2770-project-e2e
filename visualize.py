@@ -107,8 +107,8 @@ if __name__ == '__main__':
             #plt.imshow(activation.features)
             #plt.show()
             image = activation.features.toPILImage()
-  			cv2_imshow(image)
-  			print('\n')
+            cv2_imshow(image)
+            print('\n')
             activation.close()
 
 
