@@ -104,7 +104,7 @@ if __name__ == '__main__':
     activations = {}    
     for q_data_set in ['vqa', 'vqg']:
         encoder = get_encoder(config, q_data_set, device, root_dir)
-        activations = [SaveFeatures(list(encoder.children())[i]) for i in range(7)]
+        activations = [SaveFeatures(list(encoder.children())[i], device) for i in range(7)]
         features = encoder(images)
         
         for i, activation in enumerate(activations):
