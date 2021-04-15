@@ -6,7 +6,7 @@ from utils.data_loader import get_loader
 
 def get_transform(crop_size):
 	return transforms.Compose([
-        transforms.Resize(299),
+        transforms.Resize(crop_size),
         transforms.RandomCrop(crop_size),
         transforms.RandomHorizontalFlip(), 
         transforms.ToTensor(), 

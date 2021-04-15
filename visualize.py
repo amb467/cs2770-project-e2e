@@ -21,10 +21,16 @@ class SaveFeatures():
         
 def get_images(image_count, config, root_dir):
     img_dir = os.path.join(root_dir, config['test']['image_dir'])
-    transform = get_transform(int(config['general']['crop_size']))
     data_file = os.path.join(root_dir, config['test']['data_file_path'])
     img_ids = []
     images = []
+    
+    crop_size = int(config['general']['crop_size'])
+    transform = transforms.Compose([
+        transforms.Resize(crop_size),
+        transforms.ToTensor(), 
+        transforms.Normalize((0.485, 0.456, 0.406), 
+                             (0.229, 0.224, 0.225))])
 
     with open(data_file) as f:
         for line in f.readlines()[1:]:
@@ -45,7 +51,7 @@ def get_images(image_count, config, root_dir):
         image = torch.stack([transform(image)], 0)
         images.append(image)
         
-    return img_ids, images
+    return img_ids, images, crop_size
         
 def get_encoder(config, q_data_set, root_dir):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
@@ -84,7 +90,7 @@ if __name__ == '__main__':
     config.read(config_path)
 
     # Build the set of images
-    img_ids, images = get_images(args.image_count, config, root_dir)
+    img_ids, images, crop_size = get_images(args.image_count, config, root_dir)
     images = [img.to(device) for img in images]
     
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
@@ -94,6 +100,7 @@ if __name__ == '__main__':
     capture_layers = [55,64]
     filters = [0,3,15,63,255,511]
     tensor_to_image = transforms.ToPILImage()
+    transform = transforms.Compose([transforms.Resize(crop_size)])
     
     for q_data_set in ['vqa']: #['vqa', 'vqg']:
         # Make the encoder
@@ -116,6 +123,7 @@ if __name__ == '__main__':
             for layer, activation in activations.items():
                 for f in filters:
                     image = tensor_to_image(torch.squeeze(activation.features)[f])
+                    image = transform(image)
                     image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}_{f}.jpg'
                     image_path = os.path.join(out_dir, image_file_name)
                     image.save(image_path, 'JPEG')
