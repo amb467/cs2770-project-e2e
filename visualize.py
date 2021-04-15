@@ -28,7 +28,7 @@ def get_images(image_count_config, root_dir):
         
     random.shuffle(self.img_ids)
     
-    for img_id in img_ids[:image_count]
+    for img_id in img_ids[:image_count]:
         print(f'Selected image: {img_id}')
         img_file_path = os.path.join(img_dir, img_id)
         
