@@ -101,7 +101,7 @@ if __name__ == '__main__':
         encoder.eval()
         #print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
         #for i, m in enumerate(list(encoder.named_modules())):
-        	print(f'{i}\t{m[0]}')
+        #	print(f'{i}\t{m[0]}')
         #summary(encoder, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
