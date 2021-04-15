@@ -90,7 +90,7 @@ if __name__ == '__main__':
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
     activations = {} 
-    capture_layers = [0,1]
+    capture_layers = [0,1,5,8]
     tensor_to_image = transforms.ToPILImage()
     
     for q_data_set in ['vqa', 'vqg']:
@@ -99,10 +99,9 @@ if __name__ == '__main__':
         encoder = resnet = models.resnet18(pretrained=True)
         encoder.to(device)
         encoder.eval()
-        print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.children()))}')
-        summary(encoder, (3,299,299))
+        #print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.children()))}')
+        #summary(encoder, (3,299,299))
         
-        '''
         # Set up a hook to capture layer output once the encoder has run on the images
         activations = {layer: SaveFeatures(list(encoder.children())[layer]) for layer in capture_layers}
         
@@ -117,4 +116,3 @@ if __name__ == '__main__':
                 image.save(image_path, 'JPEG')
         
         [activation.close() for activation in activations.values()]
-        '''
