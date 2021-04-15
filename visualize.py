@@ -113,7 +113,7 @@ if __name__ == '__main__':
             for img_count, image in enumerate(activation.features):
                 image = transforms.ToPILImage(image)
                 image_file_name = f'{img_ids[img_count]}_{q_data_set}_{layer}.jpg'
-                image_path = os.join(out_dir, image_file_name)
+                image_path = os.path.join(out_dir, image_file_name)
                 image.save(image_path, 'JPEG')
                 
             activation.close()
