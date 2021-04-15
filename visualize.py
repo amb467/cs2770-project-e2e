@@ -107,7 +107,7 @@ if __name__ == '__main__':
             #print(f'For data set {q_data_set} and layer {i}, features: {activation.features}')
             #plt.imshow(activation.features)
             #plt.show()
-            image = transforms.toPILImage(activation.features)
+            image = transforms.ToPILImage(activation.features)
             cv2_imshow(image)
             print('\n')
             activation.close()
