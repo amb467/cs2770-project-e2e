@@ -1,6 +1,7 @@
 import argparse, configparser, os, pathlib, random, torch
 from model3 import EncoderCNN
 from utils.preproc import get_transform
+from PIL import Image
 
 class VisualizationDataset():
     def __init__(self, image_count, config, root_dir):
