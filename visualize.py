@@ -44,6 +44,7 @@ def get_encoder(config, q_data_set, device, root_dir):
         raise Exception(f'Encoder does not exist: {encoder_path}')
     
     encoder.load_state_dict(torch.load(encoder_path))
+    return encoder
     
 if __name__ == '__main__':
 
