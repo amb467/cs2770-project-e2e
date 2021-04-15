@@ -90,7 +90,7 @@ if __name__ == '__main__':
     # Get the encoders and create an array of activation objects to capture the features in the convolutional layers
     encoder = {}
     activations = {} 
-    capture_layers = [0,1,2,3,4,5,6,7,8,9]
+    capture_layers = []
     tensor_to_image = transforms.ToPILImage()
     
     for q_data_set in ['vqa']: #['vqa', 'vqg']:
@@ -100,8 +100,8 @@ if __name__ == '__main__':
         encoder.to(device)
         encoder.eval()
         print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
-        for m in encoder.modules():
-        	print(m.name)
+        for i, m_name, module in enumerate(list(encoder.named_modules)):
+        	print(f'{i}\t{m_name})
         #summary(encoder, (3,299,299))
         
         """
