@@ -99,7 +99,7 @@ if __name__ == '__main__':
         encoder = resnet = models.resnet18(pretrained=True)
         encoder.to(device)
         encoder.eval()
-        print(f'Summary of model with question data set: {q_data_set}')
+        print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.children()))}')
         summary(encoder, (3,299,299))
         
         '''
