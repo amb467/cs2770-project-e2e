@@ -1,4 +1,5 @@
 import argparse, configparser, os, pathlib, random, torch
+import torch.nn.functional as F
 from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
@@ -46,6 +47,18 @@ def get_encoder(config, q_data_set, device, root_dir):
     encoder.load_state_dict(torch.load(encoder_path))
     return encoder
     
+def forward(encoder, images):
+	with torch.no_grad():
+		x = encoder.modules[0](images)
+		x = F.max_pool2d(x, kernel_size=3, stride=2)
+		for i in range(1,len(encoder.modules)-1):	# I cut off the last layer because it was reducing the size of the matrix to 1x1
+			x = encoder.modules[i](x)
+		x = F.avg_pool2d(x, kernel_size=2)
+		x = x.view(x.size(0), -1)
+		
+	features = encoder.bn(encoder.linear(x))
+	return features
+    
 if __name__ == '__main__':
 
     # Device configuration
@@ -78,9 +91,11 @@ if __name__ == '__main__':
 
     images = [data_set[i].to(device) for i in range(args.image_count)]
     images = torch.stack(images, 0)
-    vqa_feature = vqa_encoder(images)
+    #vqa_feature = vqa_encoder(images)
+    vqa_feature = forward(vqa_encoder, images)
     print(f'VQA features: {vqa_feature}')
-    vqg_feature = vqg_encoder(images)
+    #vqg_feature = vqg_encoder(images)
+    vqg_feature = forward(vqg_encoder, images)
     print(f'VQG features: {vqg_feature}')
  
     
