@@ -102,11 +102,6 @@ if __name__ == '__main__':
     #capture_layers = [10,16,23,32,39,48,55,64]
     #capture_layers = [55,64]
     #filters = [0,3,15,63,255,511]
-    for i in range(len(model_children)):
-    if type(model_children[i]) == nn.Conv2d:
-        counter += 1
-        model_weights.append(model_children[i].weight)
-        conv_layers.append(model_children[i])
     
     for q_data_set in ['vqa']: #['vqa', 'vqg']:
         # Make the encoder
