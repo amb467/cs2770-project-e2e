@@ -75,8 +75,7 @@ def get_encoder(config, q_data_set, root_dir):
 
 # If the list has length of more than eight, step through to get at most eight
 def get_up_to_eight(lst):
-	l = len(lst)
-	
+	l = len(lst)	
 	if l > 8:
 		step = math.floor(float(l) / 8.0)
 		offset = (l-1) % step
@@ -123,32 +122,19 @@ if __name__ == '__main__':
         #   print(f'{i}\t{m[0]}')
         #summary(encoder, (3,299,299))
         
+        # Set up a hook to capture layer output once the encoder has run on the images
         modules = list(encoder.modules())
         layers = get_up_to_eight([i for i in range(len(modules)) if type(modules[i]) == nn.Conv2d])
-        print(f"Layers: {layers}")
         activations = {i: SaveFeatures(modules[i]) for i in layers}
-        
-        """
-        for i, layer in enumerate(list(encoder.modules())):
-        	print(f'Layer {i} type is {type(layer)}')
-        	if type(layer) == nn.Conv2d:
-        		activations[i] = SaveFeatures(layer)
-        """
-        		
-        # Set up a hook to capture layer output once the encoder has run on the images
-        #activations = {layer: SaveFeatures(list(encoder.modules())[layer]) for layer in capture_layers}
-        
+
         for i, img_obj in enumerate(img_objs):
             features = encoder(img_obj.image.to(device))
             
-            
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
-            	print(f'Layer {layer} with size {activation.features.size()}')
             	filters = len(list(torch.squeeze(activation.features)))
             	filters = get_up_to_eight(list(range(filters)))
-            	print(f'Filters: {filters}')
-            	"""
+
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
                     image = img_obj.resize_transform(image)
@@ -156,6 +142,6 @@ if __name__ == '__main__':
                     image_path = os.path.join(out_dir, image_file_name)
                     image.save(image_path, 'JPEG')
                     print(f'Printed image {image_file_name}')
-            	"""
+
         
         [activation.close() for activation in activations.values()]
