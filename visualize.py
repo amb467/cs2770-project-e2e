@@ -75,15 +75,15 @@ def get_encoder(config, q_data_set, root_dir):
 
 # If the list has length of more than eight, step through to get at most eight
 def get_up_to_eight(lst):
-	l = len(lst)	
-	if l > 8:
-		step = math.floor(float(l) / 8.0)
-		offset = (l-1) % step
-		s = slice(offset, l, step)
-		lst = lst[s]
-	
-	return lst
-	
+    l = len(lst)    
+    if l > 8:
+        step = math.floor(float(l) / 8.0)
+        offset = (l-1) % step
+        s = slice(offset, l, step)
+        lst = lst[s]
+    
+    return lst
+    
 if __name__ == '__main__':
 
     # Device configuration
@@ -132,8 +132,8 @@ if __name__ == '__main__':
             
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
-            	filters = len(list(torch.squeeze(activation.features)))
-            	filters = get_up_to_eight(list(range(filters)))
+                filters = len(list(torch.squeeze(activation.features)))
+                filters = get_up_to_eight(list(range(filters)))
 
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
