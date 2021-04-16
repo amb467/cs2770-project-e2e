@@ -28,7 +28,7 @@ class VisualizeImage:
 	
 	TENSOR_TO_IMAGE = transforms.ToPILImage()
 								 
-	def __init__(self, img_id, img_dir, crop_size)
+	def __init__(self, img_id, img_dir, crop_size):
 		self.img_id = img_id
 		self.img_file_path = os.path.join(img_dir, img_id)
 		self.resize_transform = transforms.Resize(crop_size)
