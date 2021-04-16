@@ -145,7 +145,7 @@ if __name__ == '__main__':
             for layer, activation in activations.items():
             	print(f'Layer {layer} with size {activation.features.size()}')
             	filters = len(list(torch.squeeze(activation.features)))
-            	filters = get_up_to_eight(range(filters))
+            	filters = get_up_to_eight(list(range(filters)))
             	print(f'Filters: {filters}')
             	"""
                 for f in filters:
