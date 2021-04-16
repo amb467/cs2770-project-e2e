@@ -148,7 +148,7 @@ if __name__ == '__main__':
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
             	print(f'Layer {layer} with size {activation.features.size()}')
-            	filters = len(list(torch.squeeze(activation.features)[0]))
+            	filters = len(list(torch.squeeze(activation.features)))
             	print(f'Number of filters: {filters}')
             	"""
                 for f in filters:
