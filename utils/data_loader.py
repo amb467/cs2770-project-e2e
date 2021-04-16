@@ -39,7 +39,7 @@ class VQGDataset(data.Dataset):
                 self.img_to_url[img_id] = img_url
                 
                 for question in questions:
-                	self.categories.append(categories)
+                    self.categories.append(categories)
                     self.questions.append(question)
                     self.images.append(img_id)
                     
