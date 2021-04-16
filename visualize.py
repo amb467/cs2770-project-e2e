@@ -141,12 +141,14 @@ if __name__ == '__main__':
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
                     image = img_obj.resize_transform(image)
                     plt.subplot(4, 4, pcount)
-                    plt.imshow(image)
                     pcount += 1
+                    image = img_obj.original_image if pcount % 4 == 1 else image
+                    plt.imshow(image)
+                    
                     #image_file_name = f'{img_obj.img_id}_{q_data_set}_{layer}_{f}.jpg'
                     #image_path = os.path.join(out_dir, image_file_name)
                     #image.save(image_path, 'JPEG')
-                    #print(f'Printed image {image_file_name}')
+                    print(f'Plotted image from image id {img_obj.img_id}; set {q_data_set}; layer {layer}; filter {f}')
             
             plt.axis('off')
             plt.savefig(os.path.join(out_dir, f'{q_data_set}_{img_obj.img_id}'))
