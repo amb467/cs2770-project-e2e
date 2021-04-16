@@ -1,5 +1,5 @@
 import argparse, configparser, math, os, pathlib, random, torch
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import torch.nn as nn, torch.nn.functional as F
 from model3 import EncoderCNN
 from utils.preproc import get_transform
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     # Build the set of images
     img_objs = VisualizeImage.get_images(args.image_count, config, root_dir)
     
-    for q_data_set in ['vqa']: #['vqa', 'vqg']:
+    for q_data_set in ['vqa', 'vqg']:
         # Make the encoder
         #encoder = get_encoder(config, q_data_set, root_dir)
         encoder = resnet = models.resnet18(pretrained=True)
@@ -129,19 +129,26 @@ if __name__ == '__main__':
 
         for i, img_obj in enumerate(img_objs):
             features = encoder(img_obj.image.to(device))
+            plt.figure()
+            pcount = 1
             
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
                 filters = len(list(torch.squeeze(activation.features)))
                 filters = step_through_list(4, list(range(filters)))
-
+                
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
                     image = img_obj.resize_transform(image)
-                    image_file_name = f'{img_obj.img_id}_{q_data_set}_{layer}_{f}.jpg'
-                    image_path = os.path.join(out_dir, image_file_name)
-                    image.save(image_path, 'JPEG')
-                    print(f'Printed image {image_file_name}')
+                    plt.subplot(17, 1, pcount)
+                    plt.imshow(image)
+                    pcount += 1
+                    #image_file_name = f'{img_obj.img_id}_{q_data_set}_{layer}_{f}.jpg'
+                    #image_path = os.path.join(out_dir, image_file_name)
+                    #image.save(image_path, 'JPEG')
+                    #print(f'Printed image {image_file_name}')
+            
+            plt.axis('off')
+            plt.savefig(os.path.join(out_dir, f'{q_data_set}_{img_obj.img_id}'))
 
-        
         [activation.close() for activation in activations.values()]
