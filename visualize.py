@@ -100,8 +100,13 @@ if __name__ == '__main__':
     img_objs = VisualizeImage.get_images(args.image_count, config, root_dir)
     
     #capture_layers = [10,16,23,32,39,48,55,64]
-    capture_layers = [55,64]
-    filters = [0,3,15,63,255,511]
+    #capture_layers = [55,64]
+    #filters = [0,3,15,63,255,511]
+    for i in range(len(model_children)):
+    if type(model_children[i]) == nn.Conv2d:
+        counter += 1
+        model_weights.append(model_children[i].weight)
+        conv_layers.append(model_children[i])
     
     for q_data_set in ['vqa']: #['vqa', 'vqg']:
         # Make the encoder
@@ -114,14 +119,22 @@ if __name__ == '__main__':
         #   print(f'{i}\t{m[0]}')
         #summary(encoder, (3,299,299))
         
+        activations = {}
+        for i, layer in enumeerate(list(encoder.children())):
+        	if type(layer) == nn.Conv2d:
+        		activations[i] = SaveFeatures(layer)
+        		
         # Set up a hook to capture layer output once the encoder has run on the images
-        activations = {layer: SaveFeatures(list(encoder.modules())[layer]) for layer in capture_layers}
+        #activations = {layer: SaveFeatures(list(encoder.modules())[layer]) for layer in capture_layers}
         
         for i, img_obj in enumerate(img_objs):
             features = encoder(img_obj.image.to(device))
             
+            
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
+            	print(f'Layer {layer} with size {activation.features.size()}')
+            	"""
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
                     image = img_obj.resize_transform(image)
@@ -129,5 +142,6 @@ if __name__ == '__main__':
                     image_path = os.path.join(out_dir, image_file_name)
                     image.save(image_path, 'JPEG')
                     print(f'Printed image {image_file_name}')
+            	"""
         
         [activation.close() for activation in activations.values()]
