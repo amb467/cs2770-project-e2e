@@ -17,7 +17,7 @@ encoder, decoder, data_loader, config = proc(args, 'train', root_dir, 'train.py'
 
 # Create model directory
 if not os.path.exists(config['model_dir']):
-	os.makedirs(config['model_dir'])
+    os.makedirs(config['model_dir'])
 
 # Put models on device
 encoder = encoder.to(device)
@@ -31,28 +31,26 @@ optimizer = torch.optim.Adam(params, lr=config['learning_rate'])
 # Train the models
 total_step = len(data_loader)
 for epoch in range(1,config['num_epochs']+1):
-	for i, (images, categories, questions, lengths) in enumerate(data_loader):
-		print(f'Epoch {epoch} and item {i}, categories: {list(categories)}')
-		"""
-		# Set mini-batch dataset
-		images = images.to(device)
-		questions = questions.to(device)
-		targets = pack_padded_sequence(questions, lengths, batch_first=True)[0]
-		
-		# Forward, backward and optimize
-		features = encoder(images)
-		outputs = decoder(features, questions, lengths)
-		loss = criterion(outputs, targets)
-		decoder.zero_grad()
-		encoder.zero_grad()
-		loss.backward()
-		optimizer.step()
+    for i, (images, categories, questions, lengths) in enumerate(data_loader):
 
-		# Print log info
-		if i % config['log_step'] == 0:
-			print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
-				  .format(epoch, config['num_epochs'], i, total_step, loss.item(), np.exp(loss.item()))) 
-		"""
-		
-	#torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
-	#torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))
+        # Set mini-batch dataset
+        images = images.to(device)
+        questions = questions.to(device)
+        targets = pack_padded_sequence(questions, lengths, batch_first=True)[0]
+        
+        # Forward, backward and optimize
+        features = encoder(images)
+        outputs = decoder(features, questions, lengths)
+        loss = criterion(outputs, targets)
+        decoder.zero_grad()
+        encoder.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        # Print log info
+        if i % config['log_step'] == 0:
+            print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
+                  .format(epoch, config['num_epochs'], i, total_step, loss.item(), np.exp(loss.item()))) 
+        
+    torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
+    torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))
