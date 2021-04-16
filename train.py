@@ -37,7 +37,7 @@ for epoch in range(1,config['num_epochs']+1):
         images = [image.to(device) for image in images]
         categories = [category_list.to(device) for category_list in categories]
         questions = questions.to(device)
-        targets = pack_padded_sequence(questions, lengths, batch_first=True)[0]
+        targets = pack_padded_sequence(questions, lengths, batch_first=True, enforce_sorted = False)[0]
         
         """
         # Forward, backward and optimize
