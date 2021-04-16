@@ -116,6 +116,7 @@ if __name__ == '__main__':
         
         activations = {}
         for i, layer in enumerate(list(encoder.children())):
+        	print(f'Layer {i} type is {type(layer)}')
         	if type(layer) == nn.Conv2d:
         		activations[i] = SaveFeatures(layer)
         		
