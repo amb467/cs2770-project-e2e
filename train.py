@@ -32,7 +32,7 @@ optimizer = torch.optim.Adam(params, lr=config['learning_rate'])
 total_step = len(data_loader)
 for epoch in range(1,config['num_epochs']+1):
 	for i, (images, categories, questions, lengths) in enumerate(data_loader):
-		print(f'Epoch {epoch} and item {i}')
+		print(f'Epoch {epoch} and item {i}, categories: {list(categories)}')
 		"""
 		# Set mini-batch dataset
 		images = images.to(device)
