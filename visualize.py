@@ -1,4 +1,4 @@
-import argparse, configparser, os, pathlib, random, torch
+import argparse, configparser, math, os, pathlib, random, torch
 #import matplotlib.pyplot as plt
 import torch.nn as nn, torch.nn.functional as F
 from model3 import EncoderCNN
@@ -71,7 +71,18 @@ def get_encoder(config, q_data_set, root_dir):
     
     encoder.load_state_dict(torch.load(encoder_path))
     return encoder
-    
+
+
+# If the list has length of more than eight, step through to get at most eight
+def get_up_to_eight(lst):
+	l = len(lst)
+	
+	if len > 8:
+		step = math.floor(float(l) / 8.0)
+		lst = slice(0, l-1, step)
+	
+	return lst
+	
 if __name__ == '__main__':
 
     # Device configuration
@@ -114,11 +125,17 @@ if __name__ == '__main__':
         #   print(f'{i}\t{m[0]}')
         #summary(encoder, (3,299,299))
         
-        activations = {}
+        modules = list(encoder.modules())
+        layers = get_up_to_eight([i if type(modules[i]) == nn.Conv2d for i in range(len(modules))])
+        print(f"Layers: {conv3}")
+        activations = {i: SaveFeatures(modules[i]) for i in layers}
+        
+        """
         for i, layer in enumerate(list(encoder.modules())):
         	print(f'Layer {i} type is {type(layer)}')
         	if type(layer) == nn.Conv2d:
         		activations[i] = SaveFeatures(layer)
+        """
         		
         # Set up a hook to capture layer output once the encoder has run on the images
         #activations = {layer: SaveFeatures(list(encoder.modules())[layer]) for layer in capture_layers}
@@ -130,6 +147,8 @@ if __name__ == '__main__':
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
             	print(f'Layer {layer} with size {activation.features.size()}')
+            	filters = len(list(torch.squeeze(activation.features)[0]))
+            	print(f'Number of filters: {filters}')
             	"""
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
