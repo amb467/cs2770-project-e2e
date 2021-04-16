@@ -129,7 +129,7 @@ if __name__ == '__main__':
 
         for i, img_obj in enumerate(img_objs):
             features = encoder(img_obj.image.to(device))
-            plt.figure()
+            plt.figure(figsize=(20, 20))
             pcount = 1
             
             # Output a visualization of each captured layer
@@ -140,7 +140,7 @@ if __name__ == '__main__':
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
                     image = img_obj.resize_transform(image)
-                    plt.subplot(17, 1, pcount)
+                    plt.subplot(4, 4, pcount)
                     plt.imshow(image)
                     pcount += 1
                     #image_file_name = f'{img_obj.img_id}_{q_data_set}_{layer}_{f}.jpg'
