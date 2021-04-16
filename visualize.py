@@ -79,7 +79,8 @@ def get_up_to_eight(lst):
 	
 	if l > 8:
 		step = math.floor(float(l) / 8.0)
-		s = slice(0, l-1, step)
+		offset = l % 8
+		s = slice(offset, l-1, step)
 		lst = lst[s]
 	
 	return lst
