@@ -111,10 +111,6 @@ if __name__ == '__main__':
     # Build the set of images
     img_objs = VisualizeImage.get_images(args.image_count, config, root_dir)
     
-    #capture_layers = [10,16,23,32,39,48,55,64]
-    #capture_layers = [55,64]
-    #filters = [0,3,15,63,255,511]
-    
     for q_data_set in ['vqa']: #['vqa', 'vqg']:
         # Make the encoder
         #encoder = get_encoder(config, q_data_set, root_dir)
@@ -149,7 +145,8 @@ if __name__ == '__main__':
             for layer, activation in activations.items():
             	print(f'Layer {layer} with size {activation.features.size()}')
             	filters = len(list(torch.squeeze(activation.features)))
-            	print(f'Number of filters: {filters}')
+            	filters = get_up_to_eight(range(filters))
+            	print(f'Filters: {filters}')
             	"""
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
