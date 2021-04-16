@@ -125,7 +125,7 @@ if __name__ == '__main__':
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
                     image = img_obj.resize_transform(image)
-                    image_file_name = f'{img_ids[i]}_{q_data_set}_{layer}_{f}.jpg'
+                    image_file_name = f'{img_obj.img_id}_{q_data_set}_{layer}_{f}.jpg'
                     image_path = os.path.join(out_dir, image_file_name)
                     image.save(image_path, 'JPEG')
                     print(f'Printed image {image_file_name}')
