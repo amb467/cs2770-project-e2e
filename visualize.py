@@ -1,6 +1,6 @@
 import argparse, configparser, os, pathlib, random, torch
 #import matplotlib.pyplot as plt
-import torch.nn.functional as F
+import torch.nn as nn, torch.nn.functional as F
 from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
