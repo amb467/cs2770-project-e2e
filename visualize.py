@@ -115,7 +115,7 @@ if __name__ == '__main__':
         #summary(encoder, (3,299,299))
         
         activations = {}
-        for i, layer in enumeerate(list(encoder.children())):
+        for i, layer in enumerate(list(encoder.children())):
         	if type(layer) == nn.Conv2d:
         		activations[i] = SaveFeatures(layer)
         		
