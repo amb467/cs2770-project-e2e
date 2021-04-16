@@ -6,7 +6,8 @@ from utils.vocab import Vocabulary, tokenize
 
 class VQGDataset(data.Dataset):
 
-	CAT_IDS = [1, 62, 3, 67, 47]
+    CAT_IDS = [1, 62, 3, 67, 47]
+    
     def __init__(self, img_dir, data_file, data_set, vocab, transform=None):
         """Set the path for images, captions and vocabulary wrapper.
         
@@ -39,7 +40,7 @@ class VQGDataset(data.Dataset):
                 cat_set = set([int(i) for i in row_data[3].split('---')])
                 cat_list = []
                 for cat in VQGDataset.CAT_IDS:
-                	cat_list.append(1 if cat in cat_set else -1)
+                    cat_list.append(1 if cat in cat_set else -1)
                 questions = row_data[q_row].split('---')
                 self.img_to_url[img_id] = img_url
                 
