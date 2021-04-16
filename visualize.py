@@ -21,43 +21,44 @@ class SaveFeatures:
 
 class VisualizeImage:
 
-	IMAGE_TO_TENSOR = transforms.Compose([
-			transforms.ToTensor(), 
-			transforms.Normalize((0.485, 0.456, 0.406), 
-								 (0.229, 0.224, 0.225))])
-	
-	TENSOR_TO_IMAGE = transforms.ToPILImage()
-								 
-	def __init__(self, img_id, img_dir, crop_size):
-		self.img_id = img_id
-		self.img_file_path = os.path.join(img_dir, img_id)
-		self.resize_transform = transforms.Resize(crop_size)
-		
-		if os.path.exists(self.img_file_path):         
-			image = Image.open(self.img_file_path).convert('RGB')
-		else:
-			raise Exception(f'VisualizeImage.__init__: no such image: {img_file_path}')
-		
-		self.original_image = self.resize_transform(image)
-		self.image = VisualizeImage.IMAGE_TO_TENSOR(self.original_image)
-		self.image = self.image.unsqueeze(0) 	# Add a batch dimension
-		
-	def get_images(image_count, config, root_dir):
-		img_dir = os.path.join(root_dir, config['test']['image_dir'])
-		data_file = os.path.join(root_dir, config['test']['data_file_path'])
-		crop_size = int(config['general']['crop_size'])
-
-		# Randomly select image_count images from the test set
-		with open(data_file) as f:
-			for line in f.readlines()[1:]:
-				row_data = line.split('\t')
-				img_ids.append(row_data[0])
-		
-		random.shuffle(img_ids)
-		img_ids = img_ids[:image_count]
-		
-		# Return a list of VisualizeImage objects for each selected image id
-		return [VisualizeImage(img_id, img_dir, crop_size) for img_id in img_ids]
+    IMAGE_TO_TENSOR = transforms.Compose([
+            transforms.ToTensor(), 
+            transforms.Normalize((0.485, 0.456, 0.406), 
+                                 (0.229, 0.224, 0.225))])
+    
+    TENSOR_TO_IMAGE = transforms.ToPILImage()
+                                 
+    def __init__(self, img_id, img_dir, crop_size):
+        self.img_id = img_id
+        self.img_file_path = os.path.join(img_dir, img_id)
+        self.resize_transform = transforms.Resize(crop_size)
+        
+        if os.path.exists(self.img_file_path):         
+            image = Image.open(self.img_file_path).convert('RGB')
+        else:
+            raise Exception(f'VisualizeImage.__init__: no such image: {img_file_path}')
+        
+        self.original_image = self.resize_transform(image)
+        self.image = VisualizeImage.IMAGE_TO_TENSOR(self.original_image)
+        self.image = self.image.unsqueeze(0)    # Add a batch dimension
+        
+    def get_images(image_count, config, root_dir):
+        img_dir = os.path.join(root_dir, config['test']['image_dir'])
+        data_file = os.path.join(root_dir, config['test']['data_file_path'])
+        crop_size = int(config['general']['crop_size'])
+        img_ids = []
+        
+        # Randomly select image_count images from the test set
+        with open(data_file) as f:
+            for line in f.readlines()[1:]:
+                row_data = line.split('\t')
+                img_ids.append(row_data[0])
+        
+        random.shuffle(img_ids)
+        img_ids = img_ids[:image_count]
+        
+        # Return a list of VisualizeImage objects for each selected image id
+        return [VisualizeImage(img_id, img_dir, crop_size) for img_id in img_ids]
         
 def get_encoder(config, q_data_set, root_dir):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
