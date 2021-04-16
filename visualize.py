@@ -127,7 +127,7 @@ if __name__ == '__main__':
         
         modules = list(encoder.modules())
         layers = get_up_to_eight([i for i in range(len(modules)) if type(modules[i]) == nn.Conv2d])
-        print(f"Layers: {conv3}")
+        print(f"Layers: {layers}")
         activations = {i: SaveFeatures(modules[i]) for i in layers}
         
         """
