@@ -73,7 +73,6 @@ class VQGDataset(data.Dataset):
     def __len__(self):
         return len(self.questions)
 
-
 def collate_fn(data):
     """Creates mini-batch tensors from the list of tuples (image, caption).
     
@@ -91,12 +90,6 @@ def collate_fn(data):
     # Sort a data list by caption length (descending order).
     data.sort(key=lambda x: len(x[1]), reverse=True)
     images, categories, captions = zip(*data)
-
-    # Merge images (from tuple of 3D tensor to 4D tensor).
-    images = torch.stack(images, 0)
-
-    # Merge categories (from a tuple of 1D tensor to 2D tensor)
-    categories = torch.stack(categories, 0)
     
     # Merge captions (from tuple of 1D tensor to 2D tensor).
     lengths = [len(cap) for cap in captions]

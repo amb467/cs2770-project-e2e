@@ -34,10 +34,12 @@ for epoch in range(1,config['num_epochs']+1):
     for i, (images, categories, questions, lengths) in enumerate(data_loader):
 
         # Set mini-batch dataset
-        images = images.to(device)
+        images = [image.to(device) for image in images]
+        categories = [category_list.to(device) for category_list in categories]
         questions = questions.to(device)
         targets = pack_padded_sequence(questions, lengths, batch_first=True)[0]
         
+        """
         # Forward, backward and optimize
         features = encoder(images)
         outputs = decoder(features, questions, lengths)
@@ -51,6 +53,7 @@ for epoch in range(1,config['num_epochs']+1):
         if i % config['log_step'] == 0:
             print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                   .format(epoch, config['num_epochs'], i, total_step, loss.item(), np.exp(loss.item()))) 
+        """
         
-    torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
-    torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))
+    #torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
+    #torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))
