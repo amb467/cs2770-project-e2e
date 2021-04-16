@@ -77,7 +77,7 @@ def get_encoder(config, q_data_set, root_dir):
 def get_up_to_eight(lst):
 	l = len(lst)
 	
-	if len > 8:
+	if l > 8:
 		step = math.floor(float(l) / 8.0)
 		lst = slice(0, l-1, step)
 	
