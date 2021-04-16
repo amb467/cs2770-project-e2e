@@ -5,14 +5,14 @@ from utils.vocab import Vocabulary
 from utils.data_loader import get_loader 
 
 def get_transform(crop_size):
-	return transforms.Compose([
+    return transforms.Compose([
         transforms.Resize(crop_size),
         transforms.RandomCrop(crop_size),
         transforms.RandomHorizontalFlip(), 
         transforms.ToTensor(), 
         transforms.Normalize((0.485, 0.456, 0.406), 
                              (0.229, 0.224, 0.225))])
-	
+    
 def proc(args, mode, root_dir, file_name):
 
     q_data_set = args.data_set
