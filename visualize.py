@@ -74,10 +74,10 @@ def get_encoder(config, q_data_set, root_dir):
 
 
 # If the list has length of more than eight, step through to get at most eight
-def get_up_to_eight(lst):
+def step_through_list(max_size, lst):
     l = len(lst)    
-    if l > 8:
-        step = math.floor(float(l) / 8.0)
+    if l > max_size:
+        step = math.floor(float(l) / float(max_size))
         offset = (l-1) % step
         s = slice(offset, l, step)
         lst = lst[s]
@@ -124,7 +124,7 @@ if __name__ == '__main__':
         
         # Set up a hook to capture layer output once the encoder has run on the images
         modules = list(encoder.modules())
-        layers = get_up_to_eight([i for i in range(len(modules)) if type(modules[i]) == nn.Conv2d])
+        layers = step_through_list(8, [i for i in range(len(modules)) if type(modules[i]) == nn.Conv2d])[-4:]
         activations = {i: SaveFeatures(modules[i]) for i in layers}
 
         for i, img_obj in enumerate(img_objs):
@@ -133,7 +133,7 @@ if __name__ == '__main__':
             # Output a visualization of each captured layer
             for layer, activation in activations.items():
                 filters = len(list(torch.squeeze(activation.features)))
-                filters = get_up_to_eight(list(range(filters)))
+                filters = step_through_list(4, list(range(filters)))
 
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
