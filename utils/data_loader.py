@@ -76,9 +76,9 @@ class VQGDataset(data.Dataset):
 def collate_fn(data):
     # Sort a data list by caption length (descending order).
     data.sort(key=lambda x: len(x[2]), reverse=True)
-    images, categories, captions = zip(*data)
-    lengths = [len(cap) for cap in captions]
-    return images, categories, targets, lengths
+    images, categories, questions = zip(*data)
+    lengths = [len(q) for q in questions]
+    return images, categories, questions, lengths
     
 def get_loader(img_dir, data_file, data_set, vocab, transform, batch_size, shuffle, num_workers):
     """Returns torch.utils.data.DataLoader for custom dataset."""
