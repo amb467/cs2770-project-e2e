@@ -1,7 +1,7 @@
-#import torch
 import torch.nn as nn
 import torchvision.models as models
 from torch.nn.utils.rnn import pack_padded_sequence
+from torchsummary import summary
 
 class SaveFeatures:
     def __init__(self, module):
@@ -14,9 +14,11 @@ class SaveFeatures:
 # This is a simple model that returns that last fully-connected layer of a Resnet 18 CNN      
 class EncoderCNN(nn.Module):
     def __init__(self):
+    	super(EncoderCNN, self).__init__()
         resnet = models.resnet18(pretrained=True)
         self.modules = resnet.modules()
         self.children = resnet.children()
+        summary(self, (3,299,299))
         self.activation = SaveFeatures(list(self.children())[-1])
         
     def __call__(self, inputs):
