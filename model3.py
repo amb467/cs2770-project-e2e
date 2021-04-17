@@ -19,11 +19,13 @@ class EncoderCNN(resnet.ResNet):
         state_dict = load_state_dict_from_url(resnet.model_urls['resnet18'], progress=True)
         self.load_state_dict(state_dict)
         summary(self, (3,299,299))
+    """
         self.activation = SaveFeatures(list(self.children())[-1])
      
     def __call__(self, inputs):
         super().__call__(inputs)
         return self.activation.features
+    """
 
 
 class DecoderRNN(nn.Module):
