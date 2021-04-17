@@ -18,8 +18,11 @@ class EncoderCNN(nn.Module):
         resnet = models.resnet18(pretrained=True)
         self.modules = resnet.modules()
         self.children = resnet.children()
-        summary(self, (3,299,299))
-        self.activation = SaveFeatures(list(self.children())[-1])
+        
+        for module in self.modules():
+        	print(module)
+        #summary(self, (3,299,299))
+        #self.activation = SaveFeatures(list(self.children())[-1])
         
     def __call__(self, inputs):
         super().__call__(inputs)
