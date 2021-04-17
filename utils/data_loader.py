@@ -82,6 +82,5 @@ def get_loader(img_dir, data_file, data_set, vocab, transform, batch_size, shuff
     data_loader = torch.utils.data.DataLoader(dataset=vqg_data, 
                                               batch_size=batch_size,
                                               shuffle=shuffle,
-                                              num_workers=num_workers,
-                                              collate_fn=collate_fn)
+                                              num_workers=num_workers)
     return data_loader
