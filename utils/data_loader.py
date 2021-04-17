@@ -68,12 +68,18 @@ class VQGDataset(data.Dataset):
         target = [self.vocab('<start>')]
         target.extend([self.vocab(token) for token in tokenize(question)])
         target.append(self.vocab('<end>'))
-        target = torch.Tensor(target)
-        return image, torch.Tensor(categories), target, len(target)
+        return image, torch.Tensor(categories), torch.Tensor(target)
 
     def __len__(self):
         return len(self.questions)
 
+def collate_fn(data):
+    # Sort a data list by caption length (descending order).
+    data.sort(key=lambda x: len(x[2]), reverse=True)
+    images, categories, captions = zip(*data)
+    lengths = [len(cap) for cap in captions]
+    return images, categories, targets, lengths
+    
 def get_loader(img_dir, data_file, data_set, vocab, transform, batch_size, shuffle, num_workers):
     """Returns torch.utils.data.DataLoader for custom dataset."""
 
@@ -82,5 +88,6 @@ def get_loader(img_dir, data_file, data_set, vocab, transform, batch_size, shuff
     data_loader = torch.utils.data.DataLoader(dataset=vqg_data, 
                                               batch_size=batch_size,
                                               shuffle=shuffle,
-                                              num_workers=num_workers)
+                                              num_workers=num_workers,
+                                              collate_fn=collate_fn)
     return data_loader
