@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torchvision.models.resnet as resnet
 from torchvision.models.utils import load_state_dict_from_url
@@ -20,7 +21,7 @@ class EncoderCNN(resnet.ResNet):
         self.activation = SaveFeatures(list(self.children())[-1])
      
     def __call__(self, inputs):
-        super().__call__(inputs)
+        super().__call__(torch.unsqueeze(inputs))
         return self.activation.features
 
 class DecoderRNN(nn.Module):
