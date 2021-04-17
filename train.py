@@ -35,7 +35,7 @@ for epoch in range(1,config['num_epochs']+1):
 
         for image, category_list, question in zip(images, categories, questions):
             image = image.to(device)
-            category = category.to(device)
+            category_list = category_list.to(device)
             question = question.to(device)
                 
             # Forward, backward and optimize
