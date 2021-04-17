@@ -12,12 +12,12 @@ class SaveFeatures:
         self.hook.remove()
 
 # This is a simple model that returns that last fully-connected layer of a Resnet 18 CNN      
-class EncoderCNN(nn.Module):
+class EncoderCNN(models.resnet18):
     def __init__(self):
-        super().__init__()
-        resnet = models.resnet18(pretrained=True)
-        self.modules = resnet.modules()
-        self.children = resnet.children()
+        super().__init__(pretrained=True)
+        #resnet = models.resnet18(pretrained=True)
+        #@self.modules = resnet.modules()
+        #self.children = resnet.children()
         
         for module in self.modules():
         	print(module)
