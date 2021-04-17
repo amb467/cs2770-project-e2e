@@ -31,7 +31,7 @@ optimizer = torch.optim.Adam(params, lr=config['learning_rate'])
 # Train the models
 total_step = len(data_loader)
 for epoch in range(1,config['num_epochs']+1):
-    for i, (images, categories, questions, lengths) in enumerate(data_loader):
+    for i, (images, categories, questions) in enumerate(data_loader):
 
         for image, category_list, question in zip(images, categories, questions):
             image = image.to(device)
@@ -39,8 +39,8 @@ for epoch in range(1,config['num_epochs']+1):
             question = question.to(device)
                 
             # Forward, backward and optimize
-            features = encoder(images)
-            outputs = decoder(features, questions, lengths)
+            features = encoder(image)
+            outputs = decoder(features, question, len(question))
             loss = criterion(outputs, targets)
             decoder.zero_grad()
             encoder.zero_grad()

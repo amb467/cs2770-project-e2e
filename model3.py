@@ -24,14 +24,12 @@ class EncoderCNN(resnet.ResNet):
         
         #for module in self.modules():
         #   print(module)
-        #summary(self, (3,299,299))
+        summary(self, (3,299,299))
         #self.activation = SaveFeatures(list(self.children())[-1])
-    
-    """    
+     
     def __call__(self, inputs):
         super().__call__(inputs)
         return self.activation.features
-    """
 
 
 class DecoderRNN(nn.Module):

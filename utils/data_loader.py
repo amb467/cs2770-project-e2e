@@ -77,8 +77,7 @@ def collate_fn(data):
     # Sort a data list by caption length (descending order).
     data.sort(key=lambda x: len(x[2]), reverse=True)
     images, categories, questions = zip(*data)
-    lengths = [len(q) for q in questions]
-    return images, categories, questions, lengths
+    return images, categories, questions
     
 def get_loader(img_dir, data_file, data_set, vocab, transform, batch_size, shuffle, num_workers):
     """Returns torch.utils.data.DataLoader for custom dataset."""
