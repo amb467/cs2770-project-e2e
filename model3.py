@@ -18,14 +18,8 @@ class EncoderCNN(resnet.ResNet):
         super().__init__(resnet.BasicBlock, [2, 2, 2, 2])
         state_dict = load_state_dict_from_url(resnet.model_urls['resnet18'], progress=True)
         self.load_state_dict(state_dict)
-        #resnet = models.resnet18(pretrained=True)
-        #@self.modules = resnet.modules()
-        #self.children = resnet.children()
-        
-        #for module in self.modules():
-        #   print(module)
         summary(self, (3,299,299))
-        #self.activation = SaveFeatures(list(self.children())[-1])
+        self.activation = SaveFeatures(list(self.children())[-1])
      
     def __call__(self, inputs):
         super().__call__(inputs)
