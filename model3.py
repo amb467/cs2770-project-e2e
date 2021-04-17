@@ -21,7 +21,7 @@ class EncoderCNN(resnet.ResNet):
         self.activation = SaveFeatures(list(self.children())[-1])
      
     def __call__(self, inputs):
-        super().__call__(torch.unsqueeze(inputs))
+        super().__call__(torch.unsqueeze(inputs,0))
         return self.activation.features
 
 class DecoderRNN(nn.Module):
