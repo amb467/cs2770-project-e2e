@@ -2,7 +2,6 @@ import torch.nn as nn
 import torchvision.models.resnet as resnet
 from torchvision.models.utils import load_state_dict_from_url
 from torch.nn.utils.rnn import pack_padded_sequence
-from torchsummary import summary
 
 class SaveFeatures:
     def __init__(self, module):
@@ -18,15 +17,11 @@ class EncoderCNN(resnet.ResNet):
         super().__init__(resnet.BasicBlock, [2, 2, 2, 2])
         state_dict = load_state_dict_from_url(resnet.model_urls['resnet18'], progress=True)
         self.load_state_dict(state_dict)
-        summary(self, (3,299,299))
-    """
         self.activation = SaveFeatures(list(self.children())[-1])
      
     def __call__(self, inputs):
         super().__call__(inputs)
         return self.activation.features
-    """
-
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, max_seq_length=20):
