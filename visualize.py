@@ -1,23 +1,12 @@
 import argparse, configparser, math, os, pathlib, random, torch
 import matplotlib.pyplot as plt
 import torch.nn as nn, torch.nn.functional as F
-from model3 import EncoderCNN
+from model3 import EncoderCNN, SaveFeatures
 from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
 from torchvision import transforms
 import torchvision.models as models
-
-#import cv2 as cv 
-#from google.colab.patches import cv2_imshow # for image display
-
-class SaveFeatures:
-    def __init__(self, module):
-        self.hook = module.register_forward_hook(self.hook_fn)
-    def hook_fn(self, module, input, output):
-        self.features = output.clone().detach()
-    def close(self):
-        self.hook.remove()
 
 class VisualizeImage:
 
@@ -62,8 +51,7 @@ class VisualizeImage:
         
 def get_encoder(config, q_data_set, root_dir):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
-    embed_size = int(config['general']['embed_size'])
-    encoder = EncoderCNN(embed_size)
+    encoder = EncoderCNN()
     encoder_path = os.path.join(model_dir, 'best_encoder.pth')
     
     if not os.path.exists(encoder_path):
@@ -113,8 +101,7 @@ if __name__ == '__main__':
     
     for q_data_set in ['vqa', 'vqg']:
         # Make the encoder
-        #encoder = get_encoder(config, q_data_set, root_dir)
-        encoder = resnet = models.resnet18(pretrained=True)
+        encoder = get_encoder(config, q_data_set, root_dir)
         encoder.to(device)
         encoder.eval()
         #print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
@@ -142,12 +129,7 @@ if __name__ == '__main__':
                     image = img_obj.resize_transform(image)
                     plt.subplot(4, 4, pcount)
                     pcount += 1
-                    image = img_obj.original_image if pcount % 4 == 1 else image
                     plt.imshow(image)
-                    
-                    #image_file_name = f'{img_obj.img_id}_{q_data_set}_{layer}_{f}.jpg'
-                    #image_path = os.path.join(out_dir, image_file_name)
-                    #image.save(image_path, 'JPEG')
                     print(f'Plotted image from image id {img_obj.img_id}; set {q_data_set}; layer {layer}; filter {f}')
             
             plt.axis('off')

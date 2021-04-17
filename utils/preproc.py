@@ -69,7 +69,7 @@ def proc(args, mode, root_dir, file_name):
     data_loader = get_loader(image_dir, data_file_path, q_data_set, vocab, transform, batch_size, True, num_workers)
 
     # Build the models
-    encoder = EncoderCNN(embed_size)
+    encoder = EncoderCNN()
     decoder = DecoderRNN(embed_size, hidden_size, len(vocab), num_layers)
     
     return encoder, decoder, data_loader, c

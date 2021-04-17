@@ -1,60 +1,27 @@
-import torch
+#import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torchvision.models as models
 from torch.nn.utils.rnn import pack_padded_sequence
 
-# Device configuration
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+class SaveFeatures:
+    def __init__(self, module):
+        self.hook = module.register_forward_hook(self.hook_fn)
+    def hook_fn(self, module, input, output):
+        self.features = output.clone().detach()
+    def close(self):
+        self.hook.remove()
 
-class EncoderCNN(nn.Module):
+# This is a simple model that returns that last fully-connected layer of a Resnet 18 CNN      
+class EncoderCNN():
     def __init__(self, embed_size):
-        """Load the pretrained ResNet-152 and replace top fc layer."""
-        super(EncoderCNN, self).__init__()
-        #resnet = models.inception_v3(pretrained=True)
         resnet = models.resnet18(pretrained=True)
-        self.modules = list(resnet.children())[:-1]      # delete the last fc layer.
-        for i in range(len(self.modules)):
-            self.modules[i] = self.modules[i].to(device)
-        self.linear = nn.Linear(2048, embed_size)
-        self.bn = nn.BatchNorm1d(embed_size, momentum=0.01)
+        self.modules = resnet.modules()
+        self.children = resnet.children()
+		self.activation = SaveFeatures(list(self.children())[-1])
         
-    def forward(self, images):
-        """Extract feature vectors from input images."""
-        with torch.no_grad():
-        
-            """ This was the set-up from the inception_v3 model
-            x = self.modules[0](images)
-            x = self.modules[1](x)
-            x = self.modules[2](x)
-            x = F.max_pool2d(x, kernel_size=3, stride=2)
-            x = self.modules[3](x)
-            x = self.modules[4](x)
-            x = F.max_pool2d(x, kernel_size=3, stride=2)
-            x = self.modules[5](x)
-            x = self.modules[6](x)
-            x = self.modules[7](x)
-            x = self.modules[8](x)
-            x = self.modules[9](x)
-            x = self.modules[10](x)
-            x = self.modules[11](x)
-            x = self.modules[12](x)
-            x = self.modules[14](x)
-            x = self.modules[15](x)
-            x = self.modules[16](x)
-            x = F.avg_pool2d(x, kernel_size=8)
-            x = x.view(x.size(0), -1)    
-            """
-            
-            x = self.modules[0](images)
-            x = F.max_pool2d(x, kernel_size=3, stride=2)
-            for i in range(1,len(self.modules)-1):	# I cut off the last layer because it was reducing the size of the matrix to 1x1
-                x = self.modules[i](x)
-            x = F.avg_pool2d(x, kernel_size=2)
-            x = x.view(x.size(0), -1)
-            
-        features = self.bn(self.linear(x))
-        return features
+	def __call__(self, inputs):
+		super().__call__(inputs)
+		return self.activation.features
 
 
 class DecoderRNN(nn.Module):
