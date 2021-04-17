@@ -33,19 +33,19 @@ total_step = len(data_loader)
 for epoch in range(1,config['num_epochs']+1):
     for i, (images, categories, questions, lengths) in enumerate(data_loader):
 
-		for image, category_list, question in zip(images, categories, questions):
-        	image = image.to(device)
-        	category = category.to(device)
-        	question = question.to(device)
-        		
-        	# Forward, backward and optimize
-        	features = encoder(images)
-        	outputs = decoder(features, questions, lengths)
-        	loss = criterion(outputs, targets)
-        	decoder.zero_grad()
-        	encoder.zero_grad()
-        	loss.backward()
-        	
+        for image, category_list, question in zip(images, categories, questions):
+            image = image.to(device)
+            category = category.to(device)
+            question = question.to(device)
+                
+            # Forward, backward and optimize
+            features = encoder(images)
+            outputs = decoder(features, questions, lengths)
+            loss = criterion(outputs, targets)
+            decoder.zero_grad()
+            encoder.zero_grad()
+            loss.backward()
+            
         optimizer.step()
 
         # Print log info

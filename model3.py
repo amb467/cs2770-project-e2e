@@ -17,11 +17,11 @@ class EncoderCNN():
         resnet = models.resnet18(pretrained=True)
         self.modules = resnet.modules()
         self.children = resnet.children()
-		self.activation = SaveFeatures(list(self.children())[-1])
+        self.activation = SaveFeatures(list(self.children())[-1])
         
-	def __call__(self, inputs):
-		super().__call__(inputs)
-		return self.activation.features
+    def __call__(self, inputs):
+        super().__call__(inputs)
+        return self.activation.features
 
 
 class DecoderRNN(nn.Module):
