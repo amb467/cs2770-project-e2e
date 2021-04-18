@@ -1,7 +1,7 @@
 import argparse, configparser, math, os, pathlib, random, torch
 import matplotlib.pyplot as plt
 import torch.nn as nn, torch.nn.functional as F
-from model3 import EncoderCNN, SaveFeatures
+from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
@@ -110,9 +110,9 @@ if __name__ == '__main__':
         #summary(encoder, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
-        modules = list(encoder.modules())
-        layers = step_through_list(8, [i for i in range(len(modules)) if type(modules[i]) == nn.Conv2d])[-4:]
-        activations = {i: SaveFeatures(modules[i]) for i in layers}
+        
+        layers = [10, 12, 32, 50]
+        encoder.create_forward_hooks(layers)
 
         for i, img_obj in enumerate(img_objs):
             features = encoder(img_obj.image.to(device))
@@ -120,12 +120,12 @@ if __name__ == '__main__':
             pcount = 1
             
             # Output a visualization of each captured layer
-            for layer, activation in activations.items():
-                filters = len(list(torch.squeeze(activation.features)))
+            for layer in layers:
+                filters = len(list(torch.squeeze(encoder.extract_layer_features(layer))))
                 filters = step_through_list(4, list(range(filters)))
                 
                 for f in filters:
-                    image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(activation.features)[f])
+                    image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(encoder.extract_layer_features(layer))[f])
                     image = img_obj.resize_transform(image)
                     plt.subplot(4, 4, pcount)
                     pcount += 1
