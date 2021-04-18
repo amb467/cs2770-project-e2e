@@ -29,7 +29,7 @@ class VisualizeImage:
         
         self.original_image = self.resize_transform(image)
         self.image = VisualizeImage.IMAGE_TO_TENSOR(self.original_image)
-        self.image = self.image.unsqueeze(0)    # Add a batch dimension
+        #self.image = self.image.unsqueeze(0)    # Add a batch dimension
         
     def get_images(image_count, config, root_dir):
         img_dir = os.path.join(root_dir, config['test']['image_dir'])
