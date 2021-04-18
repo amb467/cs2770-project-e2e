@@ -26,13 +26,13 @@ class EncoderCNN(resnet.ResNet):
     
     # Pass a list of ints representing the modules of the encoder for which you want to extract features
     def create_forward_hooks(self, layer_list):
-    	modules = list(self.modules())
-    	self.activations = {i: SaveFeatures(modules[i]) for i in layer_list}
+        modules = list(self.modules())
+        self.activations = {i: SaveFeatures(modules[i]) for i in layer_list}
     
     # Pass the int value of the layer for which you want a feature map.  Only call this after passing 
     # inputs to the encoder and you will get the output associated with those inputs
-	def extract_layer_features(layer):
-		return self.activations[layer].features
+    def extract_layer_features(layer):
+        return self.activations[layer].features
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, max_seq_length=20):
