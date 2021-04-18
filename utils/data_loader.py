@@ -85,9 +85,9 @@ def collate_fn(data):
     
     # Merge categories into a 4D tensor
     categories = torch.Tensor(categories)
-    categories.unsqueeze(1)
-    categories.unsqueeze(1)
-    categories.unsqueeze(1)
+    torch.unsqueeze(categories, 1)
+    torch.unsqueeze(categories, 1)
+    torch.unsqueeze(categories, 1)
 
     # Merge captions (from tuple of 1D tensor to 2D tensor).
     lengths = [len(q) for q in questions]
