@@ -136,4 +136,4 @@ if __name__ == '__main__':
             plt.axis('off')
             plt.savefig(os.path.join(out_dir, f'{q_data_set}_{img_obj.img_id}'))
 
-        [activation.close() for activation in activations.values()]
+        encoder.close_forward_hooks()

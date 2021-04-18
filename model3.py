@@ -33,6 +33,10 @@ class EncoderCNN(resnet.ResNet):
     # inputs to the encoder and you will get the output associated with those inputs
     def extract_layer_features(self, layer):
         return self.activations[layer].features
+    
+    def close_forward_hooks(self):
+        for activation in self.activations.values():
+            activation.close()
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers, max_seq_length=20):
