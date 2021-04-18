@@ -31,7 +31,7 @@ class EncoderCNN(resnet.ResNet):
     
     # Pass the int value of the layer for which you want a feature map.  Only call this after passing 
     # inputs to the encoder and you will get the output associated with those inputs
-    def extract_layer_features(layer):
+    def extract_layer_features(self, layer):
         return self.activations[layer].features
 
 class DecoderRNN(nn.Module):
