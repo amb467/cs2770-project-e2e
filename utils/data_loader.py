@@ -15,6 +15,7 @@ class VQGDataset(data.Dataset):
             img_dir: image directory.
             data_file: a tab-delimited file that lists image id, category score, url, categories, vqa questions, and vqg questions
             data_set: either 'vqa' or 'vqg' depending on which questions the loader should deliver
+            vocab: the training vocabulary
             transform: image transformer.
         """
         self.img_dir = img_dir
@@ -37,7 +38,8 @@ class VQGDataset(data.Dataset):
                 row_data = line.split('\t')
                 img_id = row_data[0]
                 img_url = row_data[2]
-                cat_set = set([int(i) for i in row_data[3].split('---')])
+                cat_set = row_data[3].split('---')
+                cat_set = set([int(i) for i in cat_set]) if len(cat_set) > 0 else []
                 cat_list = []
                 for cat in VQGDataset.CAT_IDS:
                     cat_list.append(1 if cat in cat_set else -1)
