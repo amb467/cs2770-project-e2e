@@ -32,7 +32,7 @@ if not os.path.exists(config['model_dir']):
 total_step = len(data_loader)
 for epoch in range(1,config['num_epochs']+1):
     for i, (images, categories, questions, lengths) in enumerate(data_loader):
-        print(f'Categories size: {categories.size()}')
+        print(f'Images size: {images.size()}')
         
         """
         for image, category_list, question in zip(images, categories, questions):
