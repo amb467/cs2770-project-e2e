@@ -21,7 +21,7 @@ class EncoderCNN(resnet.ResNet):
         self.activation = SaveFeatures(list(self.children())[-1])
      
     def __call__(self, inputs):
-        super().__call__(torch.unsqueeze(inputs,0))
+        super().__call__(inputs)
         return self.activation.features
     
     # Pass a list of ints representing the modules of the encoder for which you want to extract features
