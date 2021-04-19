@@ -1,12 +1,12 @@
 import argparse, configparser, math, os, pathlib, random, torch
 import matplotlib.pyplot as plt
 import torch.nn as nn, torch.nn.functional as F
-from model3 import EncoderCNN
 from utils.preproc import get_transform
 from PIL import Image
 from torchsummary import summary
 from torchvision import transforms
 import torchvision.models as models
+from icnn_resnet_18 import resnet_18
 
 class VisualizeImage:
 
@@ -49,9 +49,9 @@ class VisualizeImage:
         # Return a list of VisualizeImage objects for each selected image id
         return [VisualizeImage(img_id, img_dir, crop_size) for img_id in img_ids]
         
-def get_encoder(config, q_data_set, root_dir):
+def get_encoder(config, q_data_set, root_dir, pretrain_path):
     model_dir = os.path.join(root_dir, config[q_data_set]['model_dir'])
-    encoder = EncoderCNN()
+    encoder = resnet_18(pretrain_path,1,0,'logistic')
     encoder_path = os.path.join(model_dir, 'best_encoder.pth')
     
     if not os.path.exists(encoder_path):
@@ -81,6 +81,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='CS2770 Project Eval')
     parser.add_argument('--image_count', type=int, default=8, help='The number of images to select randomly from the test set for visualization')
     parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='The config file')
+    parser.add_argument('--pretrain_path', type=pathlib.Path, default='/content/CS2770-Spring-2021-Project/icnn_resnet_18/resnet18-5c106cde.pth', help='Pretrain for ICNN')
     parser.add_argument('--out_dir', type=pathlib.Path, default='visualizations', help='The output directory')
 
     args = parser.parse_args()
@@ -101,18 +102,13 @@ if __name__ == '__main__':
     
     for q_data_set in ['vqa', 'vqg']:
         # Make the encoder
-        #encoder = get_encoder(config, q_data_set, root_dir)
-        encoder = EncoderCNN()
+        encoder = get_encoder(config, q_data_set, root_dir, args.pretrain_path)
         encoder.to(device)
         encoder.eval()
-        #print(f'Summary of model with question data set: {q_data_set} and with children: {len(list(encoder.modules()))}')
-        #for i, m in enumerate(list(encoder.named_modules())):
-        #   print(f'{i}\t{m[0]}')
-        #summary(encoder, (3,299,299))
         
         # Set up a hook to capture layer output once the encoder has run on the images
         
-        layers = [10, 12, 32, 50]
+        layers = [9, 11]
         encoder.create_forward_hooks(layers)
 
         for i, img_obj in enumerate(img_objs):
@@ -128,7 +124,7 @@ if __name__ == '__main__':
                 for f in filters:
                     image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(encoder.extract_layer_features(layer))[f])
                     image = img_obj.resize_transform(image)
-                    plt.subplot(4, 4, pcount)
+                    plt.subplot(4, 2, pcount)
                     pcount += 1
                     plt.imshow(image)
                     print(f'Plotted image from image id {img_obj.img_id}; set {q_data_set}; layer {layer}; filter {f}')
