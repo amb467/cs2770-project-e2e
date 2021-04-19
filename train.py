@@ -32,8 +32,12 @@ optimizer = torch.optim.Adam(params, lr=config['learning_rate'])
 total_step = len(data_loader)
 for epoch in range(1,config['num_epochs']+1):
     for i, (images, categories, questions, lengths) in enumerate(data_loader):
-
+        print("Batch")
+        
+        """
         for image, category_list, question in zip(images, categories, questions):
+        
+        
             image = image.to(device)
             category_list = category_list.to(device)
             question = question.to(device)
@@ -52,6 +56,7 @@ for epoch in range(1,config['num_epochs']+1):
         if i % config['log_step'] == 0:
             print('Epoch [{}/{}], Step [{}/{}], Loss: {:.4f}, Perplexity: {:5.4f}'
                   .format(epoch, config['num_epochs'], i, total_step, loss.item(), np.exp(loss.item())))
+        """
         
-    torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
-    torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))
+    #torch.save(decoder.state_dict(), os.path.join(config['model_dir'], f'decoder-{epoch}.pth'))
+    #torch.save(encoder.state_dict(), os.path.join(config['model_dir'], f'encoder-{epoch}.pth'))
