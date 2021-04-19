@@ -39,7 +39,10 @@ class VQGDataset(data.Dataset):
                 img_id = row_data[0]
                 img_url = row_data[2]
                 cat_set = row_data[3].split('---')
-                cat_set = set([int(i) for i in cat_set]) if len(cat_set) > 0 else []
+                try:
+                	cat_set = set([int(i) for i in cat_set]) if len(cat_set) > 0 else []
+                except:
+                	print(f'Cat set: {cat_set}')
                 cat_list = []
                 for cat in VQGDataset.CAT_IDS:
                     cat_list.append(1 if cat in cat_set else -1)
