@@ -86,7 +86,7 @@ if __name__ == '__main__':
     parser.add_argument('--image_count', type=int, default=8, help='The number of images to select randomly from the test set for visualization')
     parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='The config file')
     parser.add_argument('--pretrain_path', type=pathlib.Path, default='/content/CS2770-Spring-2021-Project/icnn_resnet_18/resnet18-5c106cde.pth', help='Pretrain for ICNN')
-    parser.add_argument('--model_path', type=pathlib.Path, help='Encoder path')
+    parser.add_argument('--model_dir', type=pathlib.Path, help='Encoder directory')
     parser.add_argument('--out_dir', type=pathlib.Path, default='visualizations', help='The output directory')
 
     args = parser.parse_args()
@@ -105,40 +105,39 @@ if __name__ == '__main__':
     # Build the set of images
     img_objs = VisualizeImage.get_images(args.image_count, config, root_dir)
     
-    # Get the encoder
-    if not os.path.exists(args.model_path):
-        raise Exception(f'Encoder does not exist: {args.model_path}')
-    
     encoder = resnet_18(pretrain_path,1,0,'logistic')
-    encoder.load_state_dict(torch.load(args.model_path))
-    encoder.to(device)
-    encoder.eval()
     
-    # Set up a hook to capture layer output once the encoder has run on the images
-    
-    layers = [9, 11]
-    encoder.create_forward_hooks(layers)
+    for q_data_set in ['vqa', 'vqg']:
+    	encoder_path = os.path.join(args.model_dir, f'{q_data_set}-encoder-22.pth')
+		encoder.load_state_dict(torch.load(encoder_path))
+		encoder.to(device)
+		encoder.eval()
+	
+		# Set up a hook to capture layer output once the encoder has run on the images
+	
+		layers = [9, 11]
+		encoder.create_forward_hooks(layers)
 
-    for i, img_obj in enumerate(img_objs):
-        #features = encoder(img_obj.image.to(device))
-        features = encoder(Variable(img_obj.image), img.obj.category, 1, img_obj.density)
-        plt.figure(figsize=(20, 20))
-        pcount = 1
-        
-        # Output a visualization of each captured layer
-        for layer in layers:
-            filters = len(list(torch.squeeze(encoder.extract_layer_features(layer))))
-            filters = step_through_list(4, list(range(filters)))
-            
-            for f in filters:
-                image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(encoder.extract_layer_features(layer))[f])
-                image = img_obj.resize_transform(image)
-                plt.subplot(4, 2, pcount)
-                pcount += 1
-                plt.imshow(image)
-                print(f'Plotted image from image id {img_obj.img_id}; layer {layer}; filter {f}')
-        
-        plt.axis('off')
-        plt.savefig(os.path.join(out_dir, f'{img_obj.img_id}'))
+		for i, img_obj in enumerate(img_objs):
+			#features = encoder(img_obj.image.to(device))
+			features = encoder(Variable(img_obj.image), img.obj.category, 1, img_obj.density)
+			plt.figure(figsize=(20, 20))
+			pcount = 1
+		
+			# Output a visualization of each captured layer
+			for layer in layers:
+				filters = len(list(torch.squeeze(encoder.extract_layer_features(layer))))
+				filters = step_through_list(4, list(range(filters)))
+			
+				for f in filters:
+					image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(encoder.extract_layer_features(layer))[f])
+					image = img_obj.resize_transform(image)
+					plt.subplot(4, 2, pcount)
+					pcount += 1
+					plt.imshow(image)
+					print(f'Plotted image from image id {img_obj.img_id}; set {q_data_set}; layer {layer}; filter {f}')
+		
+			plt.axis('off')
+			plt.savefig(os.path.join(out_dir, f'{q_data_set}_{img_obj.img_id}'))
 
     encoder.close_forward_hooks()
