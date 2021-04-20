@@ -85,7 +85,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='CS2770 Project Eval')
     parser.add_argument('--image_count', type=int, default=8, help='The number of images to select randomly from the test set for visualization')
     parser.add_argument('--config', type=pathlib.Path, default='config.ini', help='The config file')
-    parser.add_argument('--pretrain_path', type=pathlib.Path, default='/content/CS2770-Spring-2021-Project/icnn_resnet_18/resnet18-5c106cde.pth', help='Pretrain for ICNN')
+    parser.add_argument('--pretrain_path', type=pathlib.Path, help='Pretrain for ICNN')
     parser.add_argument('--model_dir', type=pathlib.Path, help='Encoder directory')
     parser.add_argument('--out_dir', type=pathlib.Path, default='visualizations', help='The output directory')
 
