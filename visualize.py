@@ -51,7 +51,9 @@ class VisualizeImage:
         img_dir = os.path.join(root_dir, config['test']['image_dir'])
         data_file = os.path.join(root_dir, config['test']['data_file_path'])
         crop_size = int(config['general']['crop_size'])
-        img_ids = []
+        img_ids = ['345331','387124','95651']
+        
+        """
                    
         # Randomly select image_count images from the test set
         with open(data_file) as f:
@@ -64,7 +66,8 @@ class VisualizeImage:
         
         random.shuffle(img_ids)
         img_ids = img_ids[:image_count]
-        
+    	"""
+        category = 1
         # Return a list of VisualizeImage objects for each selected image id
         return [VisualizeImage(img_id, img_dir, category, crop_size) for img_id in img_ids]
         
@@ -111,7 +114,7 @@ if __name__ == '__main__':
     pretrain_path = args.pretrain_path
     encoder = resnet_18(pretrain_path,1,0,'logistic')        #resnet_18(pretrain_path, label_num, dropoutrate, losstype)
     
-    for q_data_set in ['vqa', 'vqg']:
+    for q_data_set in ['vqg']: #['vqa', 'vqg']:
         encoder_path = os.path.join(args.model_dir, f'{q_data_set}-encoder-22.pth')
         encoder.load_state_dict(torch.load(encoder_path))
         encoder.to(device)
