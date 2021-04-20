@@ -121,6 +121,7 @@ if __name__ == '__main__':
     
         layers = [9, 11]
         encoder.create_forward_hooks(layers)
+        epoch = 0
 
         for i, img_obj in enumerate(img_objs):
             #features = encoder(img_obj.image.to(device))
@@ -129,8 +130,8 @@ if __name__ == '__main__':
             #density = img_obj.density.to(device)
             #val = torch.Tensor([1]).to(device)
             #features = encoder(Variable(image), category, 1, img_obj.density)
-   
-            features = encoder(Variable(image), category, torch.Tensor([2]), img_obj.density)
+            epoch += 1
+            features = encoder(Variable(image), category, torch.Tensor([epoch + 1]), img_obj.density)
             plt.figure(figsize=(20, 20))
             pcount = 1
         
