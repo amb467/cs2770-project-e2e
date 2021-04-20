@@ -68,7 +68,8 @@ def getMask(mask_parameter, mask_weight, posTempX, posTempY, bs, depth, h, w):
     mask = torch.abs(posTempX - mask_parameter['mu_x'].repeat([1, 1, h, w]))
     mask = mask + torch.abs(posTempY - mask_parameter['mu_y'].repeat([1, 1, h, w]))
     mask = 1 - mask.mul(mask_weight.reshape(depth, 1, 1).repeat([bs, 1, h, w]))
-    mask = torch.max(mask, torch.ones(mask.size()).cuda() * (-1))
+    #mask = torch.max(mask, torch.ones(mask.size()).cuda() * (-1))
+    mask = torch.ones(mask.size()).cuda() * (-1)
     for i in range(depth):
         if not (mask_parameter['filter'][i].equal(torch.ones(1))):
             mask[:, i, :, :] = 1
