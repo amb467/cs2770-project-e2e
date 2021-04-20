@@ -3,14 +3,13 @@ import matplotlib.pyplot as plt
 from torch.nn.utils.rnn import pack_padded_sequence
 from utils.preproc import proc
 from dataclasses import dataclass
-#import torch.autograd.variable as Variable
+import torch.autograd.variable as Variable
 from torchsummary import summary
 from PIL import Image
 from torchvision import transforms
 import torchvision.models as models
 #from icnn_resnet_18 import resnet_18
 from resnet_18 import resnet_18
-import torch.autograd.Variable
 
 def get_density(label):
     if label.shape[1]>1:
@@ -125,11 +124,9 @@ if __name__ == '__main__':
 
         for i, img_obj in enumerate(img_objs):
             #features = encoder(img_obj.image.to(device))
-            image = Variable(img_obj.image.to(device))
+            image = img_obj.image.to(device)
             category = img_obj.category.to(device)
-            print(f'Image size: {image.size()}; Image: {image}')
-            print(f'Category size: {category.size()}; Category: {category}')
-            features = encoder(image, category, 1, img_obj.density)
+            features = encoder(Variable(image), category, 1, img_obj.density)
             plt.figure(figsize=(20, 20))
             pcount = 1
         
