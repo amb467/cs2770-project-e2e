@@ -128,7 +128,9 @@ if __name__ == '__main__':
             category = img_obj.category.to(device)
             density = img_obj.density.to(device)
             #features = encoder(Variable(image), category, 1, img_obj.density)
-            features = encoder(Variable(image), Variable(category), 1, Variable(density))
+            val = 1
+            val = val.to(device)
+            features = encoder(Variable(image), Variable(category), Variable(val), Variable(density))
             plt.figure(figsize=(20, 20))
             pcount = 1
         
