@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 from torch.nn.utils.rnn import pack_padded_sequence
 from utils.preproc import proc
 from dataclasses import dataclass
-import torch.autograd.variable as Variable
+#import torch.autograd.variable as Variable
 from torchsummary import summary
 from PIL import Image
 from torchvision import transforms
 import torchvision.models as models
 #from icnn_resnet_18 import resnet_18
 from resnet_18 import resnet_18
+import torch.autograd.Variable
 
 def get_density(label):
     if label.shape[1]>1:
