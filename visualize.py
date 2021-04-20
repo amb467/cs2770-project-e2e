@@ -124,6 +124,7 @@ if __name__ == '__main__':
 
         for i, img_obj in enumerate(img_objs):
             #features = encoder(img_obj.image.to(device))
+            print(f'Image type: {type(Variable(Variable(img_obj.image)))}')
             features = encoder(Variable(img_obj.image), img_obj.category, 1, img_obj.density)
             plt.figure(figsize=(20, 20))
             pcount = 1
