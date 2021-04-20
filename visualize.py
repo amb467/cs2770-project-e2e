@@ -32,7 +32,7 @@ class VisualizeImage:
         self.img_id = img_id
         self.img_file_path = os.path.join(img_dir, img_id)
         self.resize_transform = transforms.Resize(crop_size)
-        self.category = torch.Tensor(category)
+        self.category = torch.Tensor([category])
         self.category = torch.unsqueeze(self.category, 1)
         self.category = torch.unsqueeze(self.category, 1)
         self.category = torch.unsqueeze(self.category, 1)
@@ -127,7 +127,7 @@ if __name__ == '__main__':
             image = Variable(img_obj.image.to(device))
             category = img_obj.category.to(device)
             print(f'Image size: {image.size()}; Image: {image}')
-            print(f'Category size: {category.size()}; Categoy: {category}')
+            print(f'Category size: {category.size()}; Category: {category}')
             features = encoder(image, category, 1, img_obj.density)
             plt.figure(figsize=(20, 20))
             pcount = 1
