@@ -105,7 +105,8 @@ if __name__ == '__main__':
     # Build the set of images
     img_objs = VisualizeImage.get_images(args.image_count, config, root_dir)
     
-    encoder = resnet_18(args.pretrain_path,1,0,'logistic')
+    pretrain_path = args.pretrain_path
+    encoder = resnet_18(pretrain_path,1,0,'logistic')        #resnet_18(pretrain_path, label_num, dropoutrate, losstype)
     
     for q_data_set in ['vqa', 'vqg']:
         encoder_path = os.path.join(args.model_dir, f'{q_data_set}-encoder-22.pth')
