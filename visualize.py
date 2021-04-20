@@ -124,31 +124,35 @@ if __name__ == '__main__':
         epoch = 0
 
         for i, img_obj in enumerate(img_objs):
-            #features = encoder(img_obj.image.to(device))
-            image = img_obj.image.to(device)
-            category = img_obj.category.to(device)
-            #density = img_obj.density.to(device)
-            #val = torch.Tensor([1]).to(device)
-            #features = encoder(Variable(image), category, 1, img_obj.density)
-            epoch += 1
-            features = encoder(Variable(image), category, torch.Tensor([epoch + 1]), img_obj.density)
-            plt.figure(figsize=(20, 20))
-            pcount = 1
         
-            # Output a visualization of each captured layer
-            for layer in layers:
-                filters = len(list(torch.squeeze(encoder.extract_layer_features(layer))))
-                filters = step_through_list(4, list(range(filters)))
+            try:
+                #features = encoder(img_obj.image.to(device))
+                image = img_obj.image.to(device)
+                category = img_obj.category.to(device)
+                #density = img_obj.density.to(device)
+                #val = torch.Tensor([1]).to(device)
+                #features = encoder(Variable(image), category, 1, img_obj.density)
+                epoch += 1
+                features = encoder(Variable(image), category, torch.Tensor([epoch + 1]), img_obj.density)
+                plt.figure(figsize=(20, 20))
+                pcount = 1
+        
+                # Output a visualization of each captured layer
+                for layer in layers:
+                    filters = len(list(torch.squeeze(encoder.extract_layer_features(layer))))
+                    filters = step_through_list(4, list(range(filters)))
             
-                for f in filters:
-                    image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(encoder.extract_layer_features(layer))[f])
-                    image = img_obj.resize_transform(image)
-                    plt.subplot(4, 2, pcount)
-                    pcount += 1
-                    plt.imshow(image)
-                    print(f'Plotted image from image id {img_obj.img_id}; set {q_data_set}; layer {layer}; filter {f}')
+                    for f in filters:
+                        image = VisualizeImage.TENSOR_TO_IMAGE(torch.squeeze(encoder.extract_layer_features(layer))[f])
+                        image = img_obj.resize_transform(image)
+                        plt.subplot(4, 2, pcount)
+                        pcount += 1
+                        plt.imshow(image)
+                        print(f'Plotted image from image id {img_obj.img_id}; set {q_data_set}; layer {layer}; filter {f}')
         
-            plt.axis('off')
-            plt.savefig(os.path.join(out_dir, f'{q_data_set}_{img_obj.img_id}'))
+                plt.axis('off')
+                plt.savefig(os.path.join(out_dir, f'{q_data_set}_{img_obj.img_id}'))
+            except:
+                continue
 
     encoder.close_forward_hooks()
