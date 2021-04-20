@@ -8,7 +8,8 @@ from torchsummary import summary
 from PIL import Image
 from torchvision import transforms
 import torchvision.models as models
-from icnn_resnet_18 import resnet_18
+#from icnn_resnet_18 import resnet_18
+import icnn_resnet_18
 
 def get_density(label):
     if label.shape[1]>1:
@@ -108,7 +109,7 @@ if __name__ == '__main__':
     img_objs = VisualizeImage.get_images(args.image_count, config, root_dir)
     
     pretrain_path = args.pretrain_path
-    encoder = resnet_18(pretrain_path,1,0,'logistic')        #resnet_18(pretrain_path, label_num, dropoutrate, losstype)
+    encoder = icnn_resnet_18.resnet_18(pretrain_path,1,0,'logistic')        #resnet_18(pretrain_path, label_num, dropoutrate, losstype)
     
     for q_data_set in ['vqa', 'vqg']:
         encoder_path = os.path.join(args.model_dir, f'{q_data_set}-encoder-22.pth')
