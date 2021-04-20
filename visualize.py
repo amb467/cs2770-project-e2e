@@ -126,11 +126,11 @@ if __name__ == '__main__':
             #features = encoder(img_obj.image.to(device))
             image = img_obj.image.to(device)
             category = img_obj.category.to(device)
-            density = img_obj.density.to(device)
-            val = torch.Tensor([1]).to(device)
+            #density = img_obj.density.to(device)
+            #val = torch.Tensor([1]).to(device)
             #features = encoder(Variable(image), category, 1, img_obj.density)
    
-            features = encoder(Variable(image), category, val, density)
+            features = encoder(Variable(image), category, torch.Tensor([1]), img_obj.density)
             plt.figure(figsize=(20, 20))
             pcount = 1
         
